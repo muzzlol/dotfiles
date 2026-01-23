@@ -201,5 +201,4 @@ export PATH="/Users/muzz/.antigravity/antigravity/bin:$PATH"
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
 
-alias hno='echo "H. no: 8-13-141/3, Kings colony, Shastripuram, Hyderabad, Telangana" | cx'
 source ~/.secrets
