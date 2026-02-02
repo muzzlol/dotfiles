@@ -19,7 +19,8 @@ export NVM_DIR="$HOME/.nvm"
 export EDITOR="cursor --wait"
 
 # Aliases
-alias zs='source ~/.zshrc'
+alias sourcez='source ~/.zshrc'
+alias sourcet='tmux source-file ~/.config/tmux/tmux.conf'
 alias ..='cd ..'
 alias back='cd -'
 alias ...='cd ../..'
@@ -192,9 +193,9 @@ bindkey '^[[1;3C' forward-word
 
 export PATH="/Library/TeX/texbin:$PATH"
 
-if ! pgrep -f "etsu" > /dev/null; then
-    cd /Users/muzz/dev/etsu && nohup ./target/release/etsu > /dev/null 2>&1 &
-fi
+# if ! pgrep -f "etsu" > /dev/null; then
+#     cd /Users/muzz/dev/etsu && nohup ./target/release/etsu > /dev/null 2>&1 &
+# fi
 
 # Added by Antigravity
 export PATH="/Users/muzz/.antigravity/antigravity/bin:$PATH"
