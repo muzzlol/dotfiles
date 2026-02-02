@@ -3,8 +3,13 @@
   "theme": "opencode",
   "autoshare": false,
   "autoupdate": true,
+  "keybinds": {
+    "leader": "ctrl+o",
+    "messages_line_up": "alt+up",
+    "messages_line_down": "alt+down"
+  },
   "tui": {
-    "scroll_speed": 2,
+    "scroll_speed": 5,
     "scroll_acceleration": {
       "enabled": false
    }

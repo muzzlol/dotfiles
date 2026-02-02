@@ -178,7 +178,7 @@
                         ]
                     },
                     {
-                        "description": "Change caps_lock to left_shift with modifiers",
+                        "description": "Change caps_lock to left_shift with modifiers (hyper), tap for Ctrl+Space",
                         "manipulators": [
                             {
                                 "from": {
@@ -189,6 +189,12 @@
                                     {
                                         "key_code": "left_shift",
                                         "modifiers": ["left_command", "left_control", "left_option"]
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "spacebar",
+                                        "modifiers": ["left_control"]
                                     }
                                 ],
                                 "type": "basic"
@@ -390,6 +396,26 @@
                                     {
                                         "key_code": "right_arrow",
                                         "modifiers": ["left_command", "left_option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Map Hyper+O (Caps+O) to Ctrl+O for opencode leader",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "o",
+                                    "modifiers": {
+                                        "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "o",
+                                        "modifiers": ["left_control"]
                                     }
                                 ],
                                 "type": "basic"
