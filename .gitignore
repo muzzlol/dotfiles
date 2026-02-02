@@ -49,3 +49,4 @@ karabiner/automatic_backups
 # Tmux plugins (managed by TPM) - except catppuccin-tmux which has custom theme
 tmux/plugins/*
 !tmux/plugins/catppuccin-tmux/
+!tmux/plugins/catppuccin-tmux/**
