@@ -19,9 +19,24 @@
         "type": "local",
         "command": ["npx", "-y", "exa-mcp-server"],
         "environment": {
-          "EXA_API_KEY": "${EXA_API_KEY}"
+          "EXA_API_KEY": "{env:EXA_API_KEY}"
         },
         "enabled": true
       }
+    },
+    "provider": {
+      "anthropic-api": {
+        "name": "Anthropic (API)",
+        "npm": "@ai-sdk/anthropic",
+        "models": {
+          "claude-opus-4-6": {
+            "name": "Opus 4.6 (API)"
+          }
+        },
+        "options": {
+          "apiKey": "{env:ANT_API_KEY}"
+        }
+      }
     }
+
 }
