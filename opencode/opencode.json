@@ -30,11 +30,14 @@
         "npm": "@ai-sdk/anthropic",
         "models": {
           "claude-opus-4-6": {
-            "name": "Opus 4.6 (API)"
+            "name": "Opus"
           }
         },
         "options": {
-          "apiKey": "{env:ANT_API_KEY}"
+          "apiKey": "{env:ANT_API_KEY}",
+          "headers": {
+            "anthropic-beta": "claude-code-20250219,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14"
+          }
         }
       }
     }
