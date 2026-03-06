@@ -56,6 +56,7 @@ alias gits='git status'
 alias oc='opencode'
 alias gitv='gh repo view --web'
 alias gitr='git remote -v'
+alias bonk='afplay ~/dotfiles/opencode/sounds/bonk.mp3'
 
 
 ss_to_gdrive() {
