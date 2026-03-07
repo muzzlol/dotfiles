@@ -58,6 +58,10 @@ alias gitv='gh repo view --web'
 alias gitr='git remote -v'
 alias bonk='afplay ~/dotfiles/opencode/sounds/bonk.mp3'
 
+gun() {
+  sudo pkill -9 "$1"
+  bonk
+}
 
 ss_to_gdrive() {
   local filename
