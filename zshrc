@@ -53,14 +53,42 @@ alias cd="z"
 alias rmuv='rm -rf .venv .python-version uv.lock hello.py pyproject.toml'
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 alias gits='git status'
-alias oc='opencode'
 alias gitv='gh repo view --web'
 alias gitr='git remote -v'
+alias oc='opencode'
 alias bonk='afplay ~/dotfiles/opencode/sounds/bonk.mp3'
 
 gun() {
   sudo pkill -9 "$1"
   bonk
+}
+
+gen() {
+  local x="$1"
+  case "$x" in
+    pass)
+      # Generate a random 32 character base64 string for a password
+      LC_CTYPE=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 32 | base64
+      ;;
+    uuid)
+      # Generate a UUID (if uuidgen available)
+      if command -v uuidgen >/dev/null; then
+        uuidgen
+      else
+        cat /proc/sys/kernel/random/uuid 2>/dev/null || 
+          LC_ALL=C tr -dc 'a-f0-9' < /dev/urandom | head -c 32 | sed -E 's/(.{8})(.{4})(.{4})(.{4})(.{12})/\1-\2-\3-\4-\5/'
+      fi
+      ;;
+    ssh)
+      # Generate an in-memory ed25519 SSH key and print the public key only
+      ssh-keygen -t ed25519 -N "" -f /tmp/tmp_ssh_key 1>/dev/null <<<y
+      cat /tmp/tmp_ssh_key.pub
+      rm /tmp/tmp_ssh_key /tmp/tmp_ssh_key.pub
+      ;;
+    *)
+      echo "Usage: gen [pass|uuid|ssh]"
+      ;;
+  esac
 }
 
 ss_to_gdrive() {
