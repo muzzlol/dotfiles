@@ -1,6 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "theme": "opencode",
   "autoshare": false,
   "autoupdate": true,
   "keybinds": {
@@ -8,10 +7,6 @@
     "messages_line_up": "alt+up",
     "messages_line_down": "alt+down"
   },
-  "plugin": [
-    "opencode-gemini-auth@latest",
-    "opencode-antigravity-auth@latest"
-  ],
   "tui": {
     "scroll_speed": 5,
     "scroll_acceleration": {
@@ -21,15 +16,32 @@
   "mcp": {
     "exa": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "exa-mcp-server"
-      ],
+      "command": ["npx", "-y", "exa-mcp-server"],
       "environment": {
         "EXA_API_KEY": "{env:EXA_API_KEY}"
       },
       "enabled": true
+    },
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
+      "enabled": true
+    }
+  },
+  "tools": {
+    "chrome-devtools_*": false
+  },
+  "agent": {
+    "browser-debug": {
+      "tools": {
+        "chrome-devtools_list_network_requests": true,
+        "chrome-devtools_get_network_request": true,
+        "chrome-devtools_list_console_messages": true,
+        "chrome-devtools_get_console_message": true,
+        "chrome-devtools_performance_start_trace": true,
+        "chrome-devtools_performance_stop_trace": true,
+        "chrome-devtools_performance_analyze_insight": true
+      }
     }
   }
 }
