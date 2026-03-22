@@ -57,6 +57,7 @@ alias gitv='gh repo view --web'
 alias gitr='git remote -v'
 alias oc='opencode'
 alias bonk='afplay ~/dotfiles/opencode/sounds/bonk.mp3'
+alias agb='agent-browser'
 
 gun() {
   sudo pkill -9 "$1"

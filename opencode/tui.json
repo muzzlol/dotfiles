@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "keybinds": {
+    "leader": "ctrl+o",
+    "messages_line_up": "alt+up",
+    "messages_line_down": "alt+down"
+  },
+  "scroll_speed": 5,
+  "scroll_acceleration": {
+    "enabled": false
+  }
+}
