@@ -59,6 +59,7 @@ alias oc='opencode'
 alias bonk='afplay ~/dotfiles/opencode/sounds/bonk.mp3'
 alias agb='agent-browser'
 alias git-sync-upstream='git fetch upstream && git rebase upstream/dev'
+alias python=python3
 
 gun() {
   sudo pkill -9 "$1"
