@@ -212,7 +212,7 @@ zle -N select-backward-word
 
 WORDCHARS='-._@%&=+#'
 
-source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+source "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh"
 
 # Shift + Right Arrow  -> Select to next word
 bindkey '^[[1;2C' select-forward-word

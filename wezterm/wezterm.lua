@@ -25,6 +25,32 @@ config.font_size = 14.0
 config.window_decorations = "RESIZE"
 
 config.keys = {
+    {
+      key = 'O',
+      mods = 'CMD|SHIFT',
+      action = wezterm.action.QuickSelectArgs {
+        patterns = {
+          'https?://\\S+',
+        },
+        action = wezterm.action_callback(function(window, pane)
+          local url = window:get_selection_text_for_pane(pane)
+          if url and url ~= '' then
+            window:perform_action(wezterm.action.OpenLinkAtMouseCursor, pane)
+            window:perform_action(wezterm.action.OpenUri(url), pane)
+          end
+        end),
+      },
+    },
+    {
+      key = 'Y',
+      mods = 'CMD|SHIFT',
+      action = wezterm.action.QuickSelectArgs {
+        patterns = {
+          'https?://\\S+',
+        },
+        action = wezterm.action.CopyTo 'ClipboardAndPrimarySelection',
+      },
+    },
     -- tmux pane switching: Cmd+arrows → sends Alt+arrows to tmux
     { key = 'LeftArrow', mods = 'CMD', action = wezterm.action.SendKey { key = 'LeftArrow', mods = 'ALT' } },
     { key = 'RightArrow', mods = 'CMD', action = wezterm.action.SendKey { key = 'RightArrow', mods = 'ALT' } },
