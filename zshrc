@@ -57,9 +57,11 @@ alias gitv='gh repo view --web'
 alias gitr='git remote -v'
 alias oc='opencode'
 alias bonk='afplay ~/dotfiles/opencode/sounds/bonk.mp3'
-alias agb='agent-browser'
-alias git-sync-upstream='git fetch upstream && git rebase upstream/dev'
+alias gsu='git fetch upstream && git rebase upstream/dev'
 alias python=python3
+alias av='agent-vault'
+alias gcm='git checkout main'
+alias gcmp='git checkout main && git pull'
 
 gun() {
   sudo pkill -9 "$1"

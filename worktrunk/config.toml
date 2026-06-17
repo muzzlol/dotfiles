@@ -1,10 +1,2 @@
-[commit-generation]
-args = []
+[commit.generation]
 command = ""
-
-[projects."github.com/muzzlol/spectra"]
-approved-commands = [
-    "bun install",
-    "cp {{ repo_path }}/.env.local {{ worktree_path }}/.env.local",
-    "chmod +x {{ worktree_path }}/scripts/*.sh",
-]
