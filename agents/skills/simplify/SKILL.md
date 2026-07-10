@@ -1,24 +1,22 @@
 ---
-name: simpfily
-description: Find low-info comments, one-off helpers, perf issues, low-signal logs/errors, and reuse opportunities when the user explicitly asks for it. 
+name: simplify
+description: Find low-info comments, one-off helpers, perf issues, low-signal logs/errors, and reuse opportunities when the user explicitly asks for it.
 ---
 
 Instruction
-Review the scoped code by using parallel read-only review agents, then present concise cleanup findings. Do not edit files unless the user explicitly asks you to fix something.
+Review the scoped code with parallel read-only review agents, then present concise cleanup findings. Do not edit files unless the user explicitly asks you to fix something after reviewing them.
 
 Scope Selection
-If the user provided an explicit scope after /simplify (paths, symbols, a diff, or a natural-language area), use that scope.
-Otherwise, inspect local changes with both unstaged and staged diffs so staged work is not missed:
-git diff --no-color
-git diff --cached --no-color
-Treat the combined non-empty output as the scope.
-
-If there is no local diff, fall back to concrete files, symbols, or changes mentioned in the conversation.
-If that also does not exist, fall back to the current HEAD commit using git show --stat --patch --no-color HEAD.
-Preserve unrelated user changes. Do not broaden the scope beyond the selected diff or mentioned files unless needed to understand existing patterns.
+Use the first that exists:
+1. The explicit scope the user gave after /simplify (paths, symbols, a diff, or a natural-language area).
+2. All pending local changes — staged, unstaged, and untracked files alike; none silently missed.
+3. Concrete files, symbols, or changes mentioned in the conversation.
+4. The HEAD commit.
+Collect diffs as plain text (--no-color) so escape codes never reach subagents.
+Do not broaden beyond the selected scope except to understand existing patterns.
 
 Subagents
-Launch the following four subagents in parallel. They must only report findings, use the same model as the parent agent, and must not edit files, run formatters, create worktrees, or commit. Pass the full combined diff when possible; if it is too large, pass the file list, relevant hunks, and scope summary.
+Launch the following four reviewers in parallel, read-only, on the same model as the parent. Give each the full combined diff; if it is too large, the file list, relevant hunks, and a scope summary.
 
 Code quality reviewer: look for simplification opportunities, including but not limited to:
 low-information comments: comments that restate the code instead of explaining intent, edge cases, or invariants.
@@ -44,9 +42,6 @@ logging taste: logs should help reconstruct what happened at the right boundary 
 error quality: internal errors should keep enough context and cause information to diagnose failures without swallowing useful details. User-facing errors and bad states should be unambiguous, not leave users stuck or guessing, explain what happened or what the user can do next when possible, and include support-ready details such as request, trace, or run IDs, plus retry/support guidance when useful.
 
 Reuse reviewer: look for existing patterns or helpers in the scoped code and its surrounding context that allow less and simpler code. Do not introduce abstractions unless they clearly reduce complexity now.
+
 Reporting
-
-Aggregate the findings from all subagents and present them as a concise, easy-to-scan global numbered and categorized list. Group duplicates, use plain-language titles, explain the practical impact, and describe the cleanup direction. Avoid line-level detail unless it is needed to disambiguate the finding - provide high-level detail when the finding needs more context to be understood.
-Only include concrete, in-scope findings in the main list. If a broader issue is worth preserving, put it in a separate "Needs decision / out of scope" section so it is clearly not part of the main findings. use of unambigious wording and use concise examples to explain findings if relevant. 
-
-Do not edit, run formatters, or run write-oriented commands unless the user explicitly asks for fixes after reviewing the findings.
+Aggregate all findings into one concise, categorized, numbered list: duplicates grouped, plain-language titles, the practical impact, and the cleanup direction. Line-level detail only where it disambiguates a finding. Keep concrete, in-scope findings in the main list; park broader issues in a separate "Needs decision / out of scope" section so they are clearly not part of the findings.

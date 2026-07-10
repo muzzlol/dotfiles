@@ -12,6 +12,9 @@ export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 export PATH=$PATH:/opt/puppetlabs/bin
 export PATH="$HOME/bin:$PATH"
 
+# Load SSH key into agent from macOS Keychain (silent after first `ssh-add --apple-use-keychain`)
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519 2>/dev/null
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

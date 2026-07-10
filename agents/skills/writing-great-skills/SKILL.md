@@ -1,7 +1,6 @@
 ---
 name: writing-great-skills
 description: Reference for writing and editing skills well — the vocabulary and principles that make a skill predictable.
-disable-model-invocation: true
 ---
 
 A skill exists to wrangle determinism out of a stochastic system. **Predictability** — the agent taking the same _process_ every run, not producing the same output — is the root virtue; every lever below serves it.
@@ -71,6 +70,17 @@ Hunt for opportunities to refactor skills to use leading words. A triad spelled 
 
 You win twice over: fewer tokens, _and_ a sharper hook for the agent to hang its thinking on. Assume every skill is carrying restatements that leading words retire — go find them.
 
+## Criteria, not proxies
+
+Assume a capable model. Every rule serves an intention; write the intention, never a mechanical **proxy** for it — "diagram when it forks" pre-computes a judgment the agent should make ("diagram when the shape is the content") and is lossy both ways: trivial forks earn diagrams, undiagrammed cycles slip through. Quotas, format mandates, frozen choreography, numeric thresholds, personas — each stands in for a criterion the model could apply directly.
+
+Two pins are not proxies:
+
+- **Effort.** Laziness is an attention failure, not a capability failure. Pin it with a checkable completeness bar — the demand axis of a **completion criterion** ("staged, unstaged, and untracked; none silently missed") — never a command script: a script can be sleepwalked through, and it fossilizes its author's own omissions, where a bar auto-covers the hole nobody thought of.
+- **Environment facts.** Information the model cannot derive, stated with the outcome it serves — "plain text (`--no-color`) so escape codes never reach subagents" — so the outcome still governs when the memorized mechanism doesn't apply. (A **description**'s triggers are likewise exempt: invocation matching is lexical, not judgmental.)
+
+The line test: does it add information — taste, policy, facts — or supervision, pre-computing judgment the model already has? Information stays; supervision is a proxy. Proxies are written for the model you fear; criteria for the model you have.
+
 ## Failure modes
 
 Use these to diagnose issues the user may be having with the skill.
@@ -80,3 +90,4 @@ Use these to diagnose issues the user may be having with the skill.
 - **Sediment** — stale layers that settle because adding feels safe and removing feels risky. The default fate of any skill without a pruning discipline.
 - **Sprawl** — a skill simply too long, even when every line is live and unique. Hurts readability and maintainability and wastes tokens. The cure is the ladder: disclose **reference** behind pointers, and split by **branch** or sequence so each path carries only what it needs.
 - **No-op** — a line the model already obeys by default, so you pay load to say nothing. The test: does it change behaviour versus the default? A weak leading word (_be thorough_ when the agent is already thorough-ish) is a no-op; the fix is a stronger word (_relentless_), not a different technique.
+- **Proxy** — a judgment pre-computed into a mechanical rule because the author feared the model couldn't make it. Where a no-op changes nothing, a proxy changes behaviour in the wrong direction: it forecloses the better judgment. Diagnose and cure via _Criteria, not proxies_ above.
