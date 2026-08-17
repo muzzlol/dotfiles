@@ -5,15 +5,32 @@ description: Designs and audits persistent prompts, agent rules, harnesses, tool
 
 The durable boundary is external enforcement versus model-mediated behavior. Software can guarantee only the property it correctly encodes at an unavoidable enforcement point. Everything the model must interpret, judge, remember, or choose remains empirical: it depends on the specific model, task, context, and tools, and earns confidence from evidence in proportion to the risk.
 
-**Workflow** is the sequence. Consult the matching reference while working each step: **Prompt rules** (2), **Control selection** (4), **Evidence discipline** (5). Lint (3) uses the whole set.
-
 ## Workflow
 
-1. **Define the system.** Identify the message roles, tools, possible side effects, and costly failures. This step is complete when the task and capability boundaries are explicitly defined.
-2. **Specify each rule.** For each rule, state what should ideally happen; pin when and what it covers only if the rule sentence does not already make that clear; state what to do when unsure; and name observable evidence of compliance — prefer evidence hard to fake without doing the work. Add exceptions or a conflict note only when a real exception or conflict exists. This step is complete when no important term depends on an unstated interpretation.
-3. **Lint the instruction set.** Remove contradictions, stale rules, and accidental duplication. Fix bad examples by editing them — correct any that break a hard requirement, and drop or vary details you do not want imitated. This step is complete when no unresolved conflict remains among the requirements.
-4. **Assign controls.** Choose capability restrictions, authorization or approval, deterministic validation, semantic review, or prompt text according to what can actually decide the property. When the owner is prompt judgment, require an operational decision rule (trigger, action, exceptions, unsure → ask/abstain/escalate) — phrases like "be careful" are not controls. This step is complete when every high-impact failure has an owner outside prompt text wherever feasible.
-5. **Evaluate where it matters.** Compare baseline and candidate when failures are costly, repeated, or uncertain. Use representative, edge, adversarial, and known-regression cases; repeat runs when outputs vary. This step is complete when material model-sensitive choices are tested or their uncertainty is stated explicitly.
+1. **Define the system.** Identify the message roles, tools, possible side effects, and costly failures. (Reference: **Spend the model on judgment**.)
+
+   **Done when:** the task and capability boundaries are explicitly defined.
+
+2. **Specify each rule.** (Reference: **Prompt rules**.) For each rule:
+   - state what should ideally happen;
+   - pin when and what it covers only if the rule sentence does not already make that clear;
+   - state what to do when unsure;
+   - name observable evidence of compliance — prefer evidence hard to fake without doing the work;
+   - add exceptions or a conflict note only when a real exception or conflict exists.
+
+   **Done when:** no important term depends on an unstated interpretation.
+
+3. **Lint the instruction set.** Remove contradictions, stale rules, and accidental duplication. Fix bad examples by editing them — correct any that break a hard requirement, and drop or vary details you do not want imitated. (Reference: every section.)
+
+   **Done when:** no unresolved conflict remains among the requirements.
+
+4. **Assign controls.** Choose capability restrictions, authorization or approval, deterministic validation, semantic review, or prompt text according to what can actually decide the property. When the owner is prompt judgment, require an operational decision rule (trigger, action, exceptions, unsure → ask/abstain/escalate) — phrases like "be careful" are not controls. (Reference: **Spend the model on judgment**, **Control selection**.)
+
+   **Done when:** every high-impact failure has an owner outside prompt text wherever feasible.
+
+5. **Evaluate where it matters.** Compare baseline and candidate when failures are costly, repeated, or uncertain. Use representative, edge, adversarial, and known-regression cases; repeat runs when outputs vary. (Reference: **Evidence discipline**.)
+
+   **Done when:** material model-sensitive choices are tested or their uncertainty is stated explicitly.
 
 ## Spend the model on judgment
 
@@ -26,22 +43,13 @@ Repeated discovery, output transcription, turn-by-turn coordination, duplicated 
 When the procedure is still unclear, let the model perform it and record what happens. Move it into software once those traces reveal a stable procedure and doing so is worth the implementation cost. Never move work from software back to instructions without a written reason.
 
 **Bad:** The model discovers log resources, starts and polls a query, then loads every result into context to filter it.
-
 **Better:** The model writes the query and filtering logic; the tool resolves resources, executes the query, saves the evidence, and returns the model-selected result.
 
 **Bad:** The model searches source code and guesses where N+1 queries occur.
-
 **Better:** The model writes an experiment against instrumented production functions; software records database calls, and the model judges the measured behavior.
 
 **Bad:** The model re-types a subagent's proof into its output.
-
 **Better:** It cites the proof by id; software reattaches it verbatim.
-
-## Control selection
-
-- **Formal properties:** Use types, schemas, constrained decoding, parsers, tests, and validators for properties they can decide. Fail closed where the risk requires it. A valid shape does not prove truthful content, correct intent, or authorization. A validator guards only the path it sits on; when paths are added or changed, re-verify each property is still checked on all of them.
-- **Reject versus repair:** A rejecting check may cause a retry or failure, so keep prompt guidance when it improves first-pass success. Retire duplicate guidance only when a deterministic repair fully enforces the rule without a model retry or changing meaning. For example, an approval gate that rejects an unconfirmed deletion should keep the prompt rule to ask first; a renderer that safely strips terminal color codes needs no matching prompt rule. When a new rejecting check gates costly output, run it in shadow first — log what it would have rejected, measure false accepts and rejects — and enforce only after the numbers support it.
-- **Adversarial review:** When deterministic checking is unavailable, a second model may provide another fallible signal. Ask it for concrete counterexamples and exact violation locations, give it the artifact and necessary source material but not the generator's rationale, which anchors the review toward the generator's conclusion, and measure false accepts and rejects. Model diversity can help but does not guarantee independence; retain human review for consequential uncertainty.
 
 ## Prompt rules
 
@@ -58,11 +66,17 @@ When the procedure is still unclear, let the model perform it and record what ha
 - A tool description states when to call the tool, when not to — naming the alternative — and what to do when unsure. Overlapping tools must disambiguate against each other, and state cost when it should change the choice ("slower; prefer X for simple lookups"). Deleting a when-not-to-use clause needs the same justification as deleting a rule.
 
 **What does not transfer**
-- There is no universal rule-count limit, ordering, markup, emphasis, or example count that transfers across models. When adherence is weak, delete low-value rules before decorating the survivors; if a critical rule is buried, try moving it to the start or end, and compare placements only when adherence materially matters. A rule is low-value when it does not change behavior against the model's default; the default is model-specific, so disagreement is settled by running, not debate.
+- There is no universal rule-count limit, ordering, markup, emphasis, or example count that transfers across models. When adherence is weak, delete low-value rules before decorating the survivors. If a critical rule is buried, try moving it to the start or end, and compare placements only when adherence materially matters. A rule is low-value when it does not change behavior against the model's default; the default is model-specific, so disagreement is settled by running, not debate.
 - Position, repetition, formatting, capitalization, emotion, politeness, and reasoning directives such as "think step by step" are model- and task-specific interventions, not reliable sources of emphasis or quality.
 
 **Output shape**
 - Constrain the final output as the consumer requires. If strict formatting harms task quality, evaluate a separate solve-then-format stage — answer freely, then convert to the required shape — rather than assuming either layout is universally better.
+
+## Control selection
+
+- **Formal properties:** Use types, schemas, constrained decoding, parsers, tests, and validators for properties they can decide. Fail closed where the risk requires it. A valid shape does not prove truthful content, correct intent, or authorization. A validator guards only the path it sits on; when paths are added or changed, re-verify each property is still checked on all of them.
+- **Reject versus repair:** A rejecting check may cause a retry or failure, so keep prompt guidance when it improves first-pass success. Retire duplicate guidance only when a deterministic repair fully enforces the rule without a model retry or changing meaning. For example, an approval gate that rejects an unconfirmed deletion should keep the prompt rule to ask first; a renderer that safely strips terminal color codes needs no matching prompt rule. When a new rejecting check gates costly output, run it in shadow first — log what it would have rejected, measure false accepts and rejects — and enforce only after the numbers support it.
+- **Adversarial review:** When deterministic checking is unavailable, a second model may provide another fallible signal. Ask it for concrete counterexamples and exact violation locations, and measure false accepts and rejects. Give it the artifact and necessary source material but not the generator's rationale — the rationale anchors the review toward the generator's conclusion. Model diversity can help but does not guarantee independence; retain human review for consequential uncertainty.
 
 ## Evidence discipline
 

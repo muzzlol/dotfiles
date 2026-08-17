@@ -12,11 +12,10 @@ Use the first that exists:
 2. All pending local changes — staged, unstaged, and untracked files alike; none silently missed.
 3. Concrete files, symbols, or changes mentioned in the conversation.
 4. The HEAD commit.
-Collect diffs as plain text (--no-color) so escape codes never reach subagents.
 Do not broaden beyond the selected scope except to understand existing patterns.
 
 Subagents
-Launch the following four reviewers in parallel, read-only, on the same model as the parent. Give each the full combined diff; if it is too large, the file list, relevant hunks, and a scope summary.
+Launch the following four reviewers in parallel, read-only, on the same model as the parent. Pass scope handles such as paths, symbols, or commit SHAs, plus only context they cannot cheaply derive themselves. Reviewers gather their own diffs and evidence; pass content only when they cannot access it, such as a user-pasted diff.
 
 Code quality reviewer: look for simplification opportunities, including but not limited to:
 low-information comments: comments that restate the code instead of explaining intent, edge cases, or invariants.
