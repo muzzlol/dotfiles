@@ -10,6 +10,16 @@ description: TypeScript style rules. Use when writing, refactoring, or reviewing
 Remove complexity first, then build. Deletion reveals the structure an addition will sit on.
 
 - The test for a validator, guard, retry, or config knob: name the caller that produces the input it defends against. A test is not a caller. Can't? Delete it.
+- Do not invent a timeout. Add one when its deadline and timeout behavior come from a caller contract, service limit, or explicit user decision. Otherwise propose the reason, value, and what the caller does when it fires. A guessed default with no handler turns a slow call into a random failure. Use the project's existing timeout wrapper when it encodes that decision.
+- When you change a function, type, or format, update its callers. Keep the old path only for a named caller this change can't update (another repo, clients still running during a deploy, data already stored in the old format). At the retained path, comment who needs it and its removal condition, for example `// Required by CLI v1; remove when v1 support ends.` Tell the user what you retained and why so they can decide whether to remove it instead. If compatibility is contractual and indefinite, name that contract in the comment.
+
+## When an approach fails
+
+- Find the cause and verify that the approach's assumption is a domain invariant. If it is, restore the invariant at its owner (clean the data, pass the required input, fix the caller) and keep the approach. If the assumption is false or the cause remains unknown, don't hide the failure with a special case; report the evidence and options when the correct replacement requires a user choice.
+- Reject an approach as infeasible only on a blocker you verified. Run a safe representative attempt when execution is needed; otherwise cite code, data, an API contract, policy, or a measured operational limit. "Harder to write" is not a blocker.
+
+Bad: `The unique index failed on duplicate emails, so I added a findByEmail check in the handler instead.`
+Good: `The unique index fails on 14 duplicate emails, all double-submits. Two ways to keep the index: a migration that removes them, or a partial index on new rows that keeps the race for old ones. I'd take the migration; it deletes rows, so say which.`
 
 ## Control flow
 
@@ -82,11 +92,13 @@ return row.id as TenantId
 - Deep modules: substantial behavior behind a low-burden interface. Low-burden ≠ few functions.
 - Deletion test for every layer: if deleting it removes complexity, it was waste; if deleting it spreads complexity across callers, it earned its keep. No shallow pass-throughs.
 - Composition over inheritance. Imperative shell, functional core.
+- Put a fix in the module that owns the invariant, even if that module is far from where the bug showed up. If the fix already exists too low or too high, move it to the owner and remove the old copy instead of adding another check. Too low: a second caller will need the same fix. Too high: callers that can't hit the problem pay for the check. If a verified blocker prevents the move, tell the user the owner, blocker, and temporary location.
+- Keep one source of truth. If one value can always be calculated from another, store the source and calculate the other when needed: a draft invoice total is `sum(lines)`. Store both only when the second value must preserve a historical or operational fact after the source changes (the amount charged, an audit snapshot, an idempotency record), or recalculation has been measured too expensive. When both are stored, one transaction or event produces both so they cannot drift.
 - Authorization and request scoping that depend only on the request run once, in middleware or shared request setup. A check on a resource the handler loaded stays in the handler. N copies of the same guard are N−1 chances to omit one, and nothing detects the omission.
 
 ## Naming
 
-- A concept that already has a name keeps it. Before inventing a name, check the operation doesn't already exist under another one — synonyms and parallel helpers are drift.
+- Within a domain, one name per concept and one concept per name. Before inventing a name, check the operation doesn't already exist under another one. A generic word may name different concepts when its module or type qualifier makes the domain clear; otherwise find a distinct name.
 - Name files and code around durable domain nouns. Task-shaped names (`fix-review-dedup.ts`, `new-flow-helper.ts`) are bad.
 - Moved-past ideas stop existing: no references to rejected alternatives or removed concepts, in code or comments.
 
@@ -100,6 +112,7 @@ return row.id as TenantId
 - A test is a cost; it must earn its maintenance. Write one only when the change carries logic that could silently regress — a calculation, a parser, a tricky branch. Most changes don't need one; never pad a diff with tests.
 - A few tests that exercise real behavior beat a wall that exercises wiring.
 - Mock only the boundary you genuinely can't run, such as a third-party service; test through real seams, and follow the project's testing and mocking conventions when you do.
+- Don't add production behavior or public API solely for tests. No test-only exports, no `NODE_ENV === 'test'` branches, no injection seam whose only second implementation is a mock. A seam is justified by a real second implementation or a boundary you can't run or control in tests (network, clock, randomness). Extract logic only when it forms a real concept under Modules; test incidental logic through the public surface.
 - Never duplicate the logic under test into the test.
 - Asserting `toHaveBeenCalledWith` on your own mocks tests the wiring you just wrote, not behavior. If every dependency is mocked, the test proves only that the mocks agree with each other.
 

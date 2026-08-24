@@ -3,18 +3,18 @@ name: explain
 description: Explain code or a change in plain language so the reader can judge it. Use when the user asks how code works, asks what changed, or wants a walkthrough; before work that adds or changes a multi-step code flow; and without being asked after finishing a nontrivial feature or fix.
 ---
 
-The reader is the decision-maker in a codebase they might not know - assume they don't. An explanation exists to arm their judgment — a misunderstanding is worse than a gap, a negative multiplier on every decision built on it. The prose itself — ordering, sentence craft, form, register — follows the writing skill; this skill adds what explaining code demands.
+The reader is the decision-maker. State the situation before the mechanism: who is doing what, then the one path that answers. An explanation exists to arm their judgment — a misunderstanding is worse than a gap, a negative multiplier on every decision built on it. The prose itself — ordering, sentence craft, form, register — follows the writing skill; this skill adds what explaining code demands.
 
 ## Zoom, don't chapter
 
-Chapters (file-by-file, backend-then-frontend) read halfway give half a story. Zooms tell the whole story at every level, each pass sharper. Reason through up to four zooms in order, including only what the reader and artifact need. They are a reasoning order, not an output template: when the requested artifact has its own structure or writing guide, that controls the headings and organization; the zooms decide what earns inclusion and where it appears.
+Chapters (file-by-file, backend-then-frontend) read halfway give half a story. Zooms tell the whole story at every level, each pass sharper. Reason through up to four zooms in order, including only what the reader and artifact need. They are a reasoning order, not an output template: when the requested artifact has its own structure or writing guide, that controls the headings and organization; the zooms decide what earns inclusion and where it appears. Default output is situation plus enough flow to judge. Do not ship the zoom inventory.
 
 1. **Governing idea** — the one fact the rest derives from, stated first (e.g. "billing is in arrears" generates: no refunds, invoice-immediately, why a preview endpoint exists). Test: could the reader predict most of the remaining detail from it? When no generating fact exists, don't manufacture one — open with what the change does and why it was wanted. For a change, the governing idea is a claim about the author's intent: back it with stated rationale or mark it as your read, because a diff always looks like it has one theme whether or not the author had one.
 2. **Flow** — behavior as information: what data exists, how it transforms, how it reaches the user. The form choice follows the writing skill's shape rules; the option explanations add is a sketch — arrows, a grid, a numbered sequence — when faithful prose would make the reader build that structure in their head.
 3. **Pieces** — each mechanism mapped back onto the flow, file path attached as an address.
 4. **Judgment surface** — the material, contestable decisions the code embeds, each stated so the reader can veto or bless it: policies encoded, tradeoffs taken, defaults chosen. Surface only decisions that help the intended reader judge the subject. Put each beside the behavior it governs by default; create a standalone decisions section only when grouping them materially improves understanding. Omit decisions that repeat the artifact, are too implementation-specific for its audience, or fall outside its purpose. A veto needs a target: state the alternative that was live and what switching would cost, so the reader rejects a decision toward something, not just away from it. When files were created or moved, the carving is itself a decision when it materially affects the design — name it and defend it (durable domain object, or task-shaped?). Mark what you are unsure of; a confident gloss is the misunderstanding this skill exists to prevent.
 
-Verdicts normally come last because judging requires understanding: each zoom is the most valuable thing *given what has already been read*. Lead with the verdict when the reader explicitly asks for it or when delaying it would obscure the answer.
+Verdicts normally come last because judging requires understanding: each zoom is the most valuable thing *given what has already been read*. Lead with the verdict only when every premise it depends on is already in the thread.
 
 ## Show code flow before editing
 
@@ -34,7 +34,7 @@ If the code ends up different from the plan, fix **After** in the final explanat
 
 ## Defaults
 
-Apply these defaults for a reader unfamiliar with the code; depart when the reader's context or task makes another ordering clearer. The general prose defaults — plain words, local completeness, concrete anchors, performative text cut — live in the writing skill; these are the ones explaining code adds.
+Apply these defaults when the situation is not already in the thread; depart when the reader's message already stated it. The general prose defaults — plain words, local completeness, concrete anchors, performative text cut — live in the writing skill; these are the ones explaining code adds.
 
 - **Correct the tempting wrong model.** Call out behavior that a newcomer would reasonably predict incorrectly.
 - **Close the causal chain.** Trace the path from input or trigger through each consequential decision and state change to the observable result. Do not hide a missing step behind "then" or "eventually."

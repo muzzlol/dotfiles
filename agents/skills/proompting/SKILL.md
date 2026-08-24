@@ -14,15 +14,20 @@ The durable boundary is external enforcement versus model-mediated behavior. Sof
 2. **Specify each rule.** (Reference: **Prompt rules**.) For each rule:
    - state what should ideally happen;
    - pin when and what it covers only if the rule sentence does not already make that clear;
-   - state what to do when unsure;
+   - state the required fallback when uncertainty can change behavior; if none is specified, surface the missing policy instead of inventing it;
    - name observable evidence of compliance — prefer evidence hard to fake without doing the work;
    - add exceptions or a conflict note only when a real exception or conflict exists.
 
    **Done when:** no important term depends on an unstated interpretation.
 
-3. **Lint the instruction set.** Remove contradictions, stale rules, and accidental duplication. Fix bad examples by editing them — correct any that break a hard requirement, and drop or vary details you do not want imitated. (Reference: every section.)
+3. **Remove what the model does not need.**
+   - Delete instructions that conflict, are outdated, or repeat another instruction.
+   - Keep an instruction or interface choice only when a stated requirement, observed failure, or established default supports it. Support for a restriction, default, or limit must establish its exact behavior or value. A name, example, purpose, or preferred use case is not a requirement; if nothing establishes a restriction, leave the behavior allowed.
+   - When cardinality is unspecified, use unquantified prose (“independent inputs,” not “multiple independent inputs”) and omit validators such as `minItems` and `maxItems`; singular or plural nouns and whether empty or one-item input seems useful do not specify cardinality.
+   - Ask the model for a tool input only when the model must choose its value. If code can derive the value, derive it in code.
+   - Mention how a tool works only when the model must account for it.
 
-   **Done when:** no unresolved conflict remains among the requirements.
+   **Done when:** every remaining instruction and interface choice can cite its support. (Reference: every section.)
 
 4. **Assign controls.** Choose capability restrictions, authorization or approval, deterministic validation, semantic review, or prompt text according to what can actually decide the property. When the owner is prompt judgment, require an operational decision rule (trigger, action, exceptions, unsure → ask/abstain/escalate) — phrases like "be careful" are not controls. (Reference: **Spend the model on judgment**, **Control selection**.)
 
@@ -63,7 +68,7 @@ When the procedure is still unclear, let the model perform it and record what ha
 **Load and ownership**
 - Keep always-loaded instructions for guidance needed across tasks. Put branch-specific guidance behind clear pointers, and test routing when missing it would matter.
 - Put tool-specific behavior in the tool definition rather than duplicating it in the system prompt. Keep only policy that applies across tools in the shared prompt.
-- A tool description states when to call the tool, when not to — naming the alternative — and what to do when unsure. Overlapping tools must disambiguate against each other, and state cost when it should change the choice ("slower; prefer X for simple lookups"). Deleting a when-not-to-use clause needs the same justification as deleting a rule.
+- When the model chooses whether to call a tool, its description states when to call it. If a requirement or observed failure establishes that some requests should use another tool or no tool, state that boundary, name the alternative, and say what to do when unsure. Overlapping tools must disambiguate against each other, and state cost when it should change the choice ("slower; prefer X for simple lookups"). Do not invent a restriction to complete this structure.
 
 **What does not transfer**
 - There is no universal rule-count limit, ordering, markup, emphasis, or example count that transfers across models. When adherence is weak, delete low-value rules before decorating the survivors. If a critical rule is buried, try moving it to the start or end, and compare placements only when adherence materially matters. A rule is low-value when it does not change behavior against the model's default; the default is model-specific, so disagreement is settled by running, not debate.

@@ -11,7 +11,7 @@ Keep a sentence only if removing it makes the next agent likelier to reopen a de
 
 State
 - goal, outcome, next step.
-- settled direction.
+- settled direction in affirmative terms.
 - invariants, constraints, or preferences not encoded in code.
 - read anchors: files, symbols, commands, diffs, docs.
 - plausible traps the positive direction does not already prevent.
@@ -19,7 +19,8 @@ State
 
 Drop
 - history, narration, rationale archaeology.
-- rejected options, caveats, uncertainty, and adjacent facts that do not change action.
+- rejected options, including negated alternatives.
+- caveats, uncertainty, and adjacent facts that do not change action.
 - walkthroughs, architecture summaries, and implementation sketches better rediscovered from the repo.
 - generic advice, praise, apologies, confidence language.
 
