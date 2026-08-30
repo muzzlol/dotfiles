@@ -46,7 +46,7 @@ alias s='ncspot'
 alias vi='nvim'
 alias vim='nvim'
 alias sv='source .venv/bin/activate'
-alias k='cursor'
+alias k='kubectl'
 alias kk='cursor .'
 alias kz='cursor ~/.zshrc'
 alias vz='vim ~/.zshrc'
@@ -244,3 +244,13 @@ export PATH="/Users/muzz/.antigravity/antigravity/bin:$PATH"
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
 
 source ~/.secrets
+
+# pnpm
+export PNPM_HOME="/Users/muzz/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
+
+export PATH="$HOME/.krew/bin:$PATH"

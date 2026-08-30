@@ -1,69 +1,78 @@
 ---
 name: writing
-description: "Write prose that keeps its reader. Use when composing or revising any text a human will read: replies, explanations, PR and commit messages, docs, error text."
+description: Write and revise prose for human readers. Use for replies, explanations, procedures, documentation, PR and commit messages, and user-facing text.
 ---
 
-Readers satisfice. At the start of every unit — the reply, a section, a paragraph, a list item — they judge whether continuing will pay, and leave the moment it won't; on screens they read shallower and skim harder. Write so that wherever the reader stops, they leave with the best understanding that much attention could buy — **progressive payoff**.
+Write for one forward reading: later text may add detail, but it must not force the reader to reinterpret earlier text.
 
-Clarity per unit of attention is the goal; brevity is a byproduct. **Select, don't compress:** shorten by leaving whole sentences and sections out, never by squeezing grammar out of the ones that stay — telegram-style fragments are shorter and understood worse, because the dropped articles, subjects, and connectives carried the logic.
+## Describe or direct
 
-Do not trust the feel of your own draft. "Clear to me" is the curse of knowledge talking, and "felt thorough, looked organized" is how raters get fooled by length and markup, not how readers win. Trust the checks at the end.
+When explaining how something works, write **declaratively**: describe the subject, naming the actor, behavior, conditions, and cause needed to explain the result.
 
-## Order
+When explaining how to do something, write **procedurally**: direct the reader with imperative verbs, put actions in execution order, and place each prerequisite or warning before the action it governs. State the expected result when the reader needs it to tell whether the action worked.
 
-- **Open with the thing asked for.** The first sentence answers the question or states the outcome; support follows. Openers that restate the question, announce what you are about to do, or appraise the asker spend the reader's best attention on nothing. If the answer depends on a premise that is not in the user's message or prior turns, write that premise first, then the answer. Delay also when the reader asked to be walked through the reasoning.
-- **Front-load every unit.** The exit decision happens at the start of each unit, so a paragraph's first sentence carries its point and a section's first paragraph its conclusion. Test: headings and first sentences alone should reconstruct the message — that is how skilled readers actually scan.
-- **Size tracks the question.** A one-line question gets a one-line answer unless the truth will not fit in one line. Stop when the request is answered; offer depth rather than including it.
-- **Must-read lines sit alone.** A warning or destructive step goes in its own short paragraph immediately before the action it governs, never inside a list or a long block. Scannable structure exists for finding things; a line the reader must not skip should be harder to skip than to read.
+When a document must both describe and direct, include explanation inside the procedure only when it helps the reader choose, perform, or verify an action.
 
-## Sentences
+## Order and form
 
-- **Plain words.** The shortest common word that carries the exact meaning. Inflated diction lowers both comprehension and the reader's estimate of the writer, and expert readers prefer plain wording more, not less — writing up to sound senior runs the status inference backwards.
-- **The audience's vocabulary.** A term the reader uses daily is compression; a term they don't own deters even when defined. Introduce an unfamiliar name by its role before the name itself; teach a term only if the reader needs it beyond this text, glossing it in the same breath ("optimize the measurable stand-in and it stops tracking the goal — a Goodhart trap"). If unsure whether the audience owns a term, gloss it once — a clause spent on a known term is cheaper than a reader lost to an unknown one. A coined label may follow the plain statement it compresses, never replace it. Cut allusions that only decorate.
-- **One name per thing.** Rotating synonyms for one referent ("check", then "verify", then "confirm") forces the reader to re-derive that they are the same act; reuse the established name, and save variation for things that actually differ.
-- **One main claim per sentence.** A sentence overloads when it stacks open dependencies faster than the reader closes them — working memory holds about three or four. Split at the clause boundary and keep the connective: "because", "but", and "so" are what make two short sentences one thought, and deleting them to save words deletes the logic.
-- **Actors act.** Say who does what with a verb: "we decided", not "a decision was made regarding". Default to active voice; use the passive when the actor is unknown or irrelevant, or when the acted-on thing is the sentence's topic — flow outranks voice. A noun stack that isn't the thing's established name gets unpacked into its relations ("the handler that sets task-queue priority", not "the task queue priority handler").
-- **Known first, new last.** Inside a sentence, open from what the reader already holds and land the news at the end; a sentence whose link to the previous one isn't findable in its first words sends the reader searching backwards, and the search is where they quit. (The unit opens with its news when the premise is already in the thread; otherwise the premise is the first unit.)
-- **Concrete anchors.** Ground each abstraction in a named instance — the actual function, the real value, a worked example. Evaluative labels ("safe", "fast", "simple") are claims until the mechanism or measurement appears. A number arrives inside its miniature story — who did what, what moved — never as a bare delta or citation ID.
-- **Locally complete.** Every sentence decodes with what the reader is holding: no forward references ("as we'll see"), no recall demands ("per principle 4 above") — restate in place. For expert readers, cut the inferences they will draw themselves, but never the referential and logical links: cohesion costs an expert nothing, and a missing connective costs everyone.
+When answering a direct question, state the answer first if the reader can understand it without a missing premise. Otherwise, state the required premise first.
 
-## Shape
+Apply the same order to every unit: open each section and each paragraph with its point, and let the rest of the unit support or qualify it. Break a paragraph where the idea changes; add headings only when the structure is complex enough that the reader must navigate.
 
-- **Form follows the information's shape.** Causality, rationale, and tradeoffs take connected prose — a list fragments an argument and measurably drains recall of the prose around it. Parallel discrete items (steps, options, parameters) take a list. N items × M attributes takes a table. Choose the form as an explicit step; when unsure, prose.
-- **Lists hold parallel items only.** Each item the same kind of thing, no paragraphs disguised as bullets, and consecutive items never opening with the same words — readers skip repeated lead words wholesale.
-- **Headings when there is something to navigate.** Multi-topic or long answers get keyword-first, sentence-case headings; marking structure helps even expert readers. A short single-topic answer wearing headings is costume. Bold is a budget: a few load-bearing phrases a scanner must not miss — emphasis works by contrast, and it helps the reader find, not remember.
-- **Paragraphs break at idea boundaries** and stay short on screens; a block that fills the viewport reads as skippable.
-- **No more markup than the content demands.** Raters reward lists, bold, and headers; readers don't understand more, heavy formatting fragments reasoning, and it now reads as machine output. Emoji only on request.
+Choose form from the relationship between the information:
 
-## Cut
+- Use numbered steps when order is part of the meaning.
+- Use bullets for independent items.
+- Use a table when items share the same attributes, the reader needs comparison or lookup, and the medium renders the table clearly.
+- Use connected prose when causality, qualification, or argument carries the meaning.
+- Indent an exception under the rule it narrows. A peer bullet hides what it modifies; inlining it bloats the rule. Warnings and prerequisites still come before the action they govern.
 
-- **Relevance is the admission test.** Every sentence either advances the reader's understanding of the subject or helps them judge it. Interesting-but-irrelevant material measurably reduces retention of everything around it — cut asides and color even when they're good.
-- **Cut performative sentences.** Importance-signaling, expertise-signaling, throat-clearing, and closing recaps ("In summary…"): end when the answer ends.
-- **A hedge must carry information.** Name the specific uncertainty and its consequence ("I didn't run the migration, so the timing claim is untested"), then stop. Blanket disclaimers and reflexive qualifiers spend attention and trust on nothing. Padding is also a diagnostic — verbose answers are disproportionately wrong ones — so treat the urge to pad as a prompt to verify, not to write.
+## Build for forward reading
 
-## Register
+- each condition, exception, definition, or premise before the text it governs.
 
-Readers cannot tell machine text from human text by content; they judge by surface tells, and text read as machine-made takes a persistent trust penalty — the reader stops reading and starts auditing. Polish is not protection: fluent, comprehensive delivery measurably lowers scrutiny of wrong claims. Write to be checkable, not impressive.
+  Bad: `The service deletes uploads after 30 days unless the account has an active subscription.`
 
-- **Fingerprint words.** Where a plain word exists, these are banned: delve, showcase, boast, underscore (as a verb), tapestry, realm, testament, pivotal, meticulous, intricate, foster, vibrant, "rich" (figurative). They are corpus-measured signatures of machine prose; write the plain verb or nothing.
-- **Fingerprint constructions, each with its repair.** Reflex "not just X — Y" frames (contrast is for correcting a misreading the reader actually has, not manufacturing one to sound sharp); "serves as / functions as / boasts" (write "is" or "has"); trailing-participle analysis ("…, highlighting the importance of…": make the consequence its own claim or end the sentence); adjective triplets by default (three slots invite one filler); chained sentence-openers "Moreover… Furthermore… Additionally…" (a real connective sits inside the thought; essay glue fakes flow); puffery ("plays a vital role", "stands as a testament": state the actual role); vague authority ("observers note", "industry reports": name the source or drop the claim).
-- **Em dashes in moderation.** One is punctuation; several per paragraph is a fingerprint. Rewrite the extras as separate sentences or commas.
-- **No flattery, no validation.** "Great question", "You're absolutely right", and agreement-first framing read as insincere and measurably reduce trust. Answer.
+  Better: `For accounts without an active subscription, the service deletes uploads after 30 days.`
 
-## Check
+- subjects near their verbs, verbs near their objects, modifiers near what they modify, and pronouns near unambiguous antecedents.
+- begin sentences with what earlier text established; put new information at the end.
+- name causal, conditional, and contrasting relationships with words such as `because`, `if`, `so`, and `but`; do not leave the reader to infer a relationship from adjacency.
+- References locate; prose explains. Every path, line number, label, or ID follows a complete statement of the point it supports.
 
-The curse of knowledge is why this pass is mechanical rather than felt. Before sending, verify:
+## Choose precise, familiar words
 
-1. The first sentence is the answer or outcome — unless that answer depends on a premise not yet in the thread; then the first sentence is the premise. Delete the opener if it only announces, restates, or warms up.
-2. Headings plus first sentences reconstruct the message.
-3. Causal reasoning is in prose; every list is parallel items; every table is enumerable facts.
-4. No fingerprint words or constructions; every hedge names its uncertainty.
-5. Truncated at any section boundary, what the reader has is true, self-standing, and not misleading — the **cut test**.
+- Use the most familiar word that preserves the exact meaning. Do not trade precision for simplicity or use inflated wording for status.
+- When only an unfamiliar technical term is precise enough, explain its role before relying on its name.
+- Once a thing has a name, reuse that name. Do not rotate synonyms for variety.
+- Replace labels such as "safe", "fast", "simple", and "robust" with the behavior, mechanism, or measurement that supports them.
+- Anchor a category with an instance in parentheses (importance claims ("it is important to note")). An unanchored category lets each reader draw its boundary differently.
 
-When a reader says they're lost, the miss is usually a missing premise, not excess words: re-ground in what they already know and supply the premise — don't merely shorten.
+Vague: `The retry behavior is robust.`
 
-## Scope and upkeep
+Precise: `After a timeout, the client retries twice and then returns the last error.`
 
-This skill governs prose for human readers. Documents written for agents to read — skills, prompts, rules — follow the proompting and skill-format skills instead: there explanation is waste; here it is the product.
+## State uncertainty
 
-Every rule above is graded and sourced in [EVIDENCE.md](EVIDENCE.md), which also holds the debunked advice that must not re-enter (sentence-length comprehension percentages, "7±2", always-active-voice, jargon-is-fine-if-defined, readability-formula targets, friction-for-depth). Edit this file under the proompting skill's discipline: read a rule's grade there before weakening or deleting it, and check the Debunked list before admitting a new rule.
+State what is unknown and which conclusion or action the uncertainty limits. Do not spread a local uncertainty across the whole answer with generic hedges or disclaimers.
+
+Example: `I did not run the migration, so its completion time is unverified.`
+
+## Delete sentences that change nothing
+
+Delete a sentence when removing it changes neither what the reader understands, what they decide, nor what they do.
+Delete empty framing such as announcements ("here is a breakdown"), importance claims ("it is important to note"), and recaps that repeat the same conclusion.
+
+## Make documents self-contained
+
+A new reader must not need the conversation that produced a document. Replace references such as "as discussed", "from our thread", and "the earlier conversation" with the premise, decision, or rationale they stand for. A durable, accessible source may supply evidence or detail, but the document carries the context needed to interpret its main claims.
+
+## Test the draft
+
+Read from left to right, stopping after the direct answer, each section, and each completed step. Everything read so far remains true; later text may deepen it but never correct it.
+
+## Scope
+
+This skill governs prose for human readers. Prompts, skills, and agent rules follow the proompting and skill-format skills instead; clear prose does not replace their controls and completion criteria.
+
+[EVIDENCE.md](EVIDENCE.md) records the research behind inherited rules and the debunked advice that must not re-enter. Consult the relevant entry before changing a research-backed rule.
