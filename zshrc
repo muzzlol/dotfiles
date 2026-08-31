@@ -12,12 +12,11 @@ export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 export PATH=$PATH:/opt/puppetlabs/bin
 export PATH="$HOME/bin:$PATH"
 
-# Load SSH key into agent from macOS Keychain (silent after first `ssh-add --apple-use-keychain`)
-ssh-add --apple-use-keychain ~/.ssh/id_ed25519 2>/dev/null
-
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+nvm_versions=("$NVM_DIR"/versions/node/v*(Nn))
+(( ${#nvm_versions} )) && export PATH="${nvm_versions[-1]}/bin:$PATH"
+unset nvm_versions
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use
 
 export EDITOR="cursor --wait"
 
@@ -127,24 +126,6 @@ latestdl() {
   fi
 }
 
-eval "$(uv generate-shell-completion zsh)"
-
-_uv_run_mod() {
-    if [[ "$words[2]" == "run" && "$words[CURRENT]" != -* ]]; then
-        # Check if any previous argument after 'run' ends with .py
-        if [[ ${words[3,$((CURRENT-1))]} =~ ".*\.py" ]]; then
-            # Already have a .py file, complete any files
-            _arguments '*:filename:_files'
-        else
-            # No .py file yet, complete only .py files
-            _arguments '*:filename:_files -g "*.py"'
-        fi
-    else
-        _uv "$@"
-    fi
-}
-compdef _uv_run_mod uv
-
 gitac() {
   git add -A .
   git commit -m "$1"
@@ -199,6 +180,26 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 fpath+=~/.zfunc
 autoload -Uz compinit && compinit
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+eval "$(uv generate-shell-completion zsh)"
+
+_uv_run_mod() {
+    if [[ "$words[2]" == "run" && "$words[CURRENT]" != -* ]]; then
+        # Check if any previous argument after 'run' ends with .py
+        if [[ ${words[3,$((CURRENT-1))]} =~ ".*\.py" ]]; then
+            # Already have a .py file, complete any files
+            _arguments '*:filename:_files'
+        else
+            # No .py file yet, complete only .py files
+            _arguments '*:filename:_files -g "*.py"'
+        fi
+    else
+        _uv "$@"
+    fi
+}
+compdef _uv_run_mod uv
+
 # bun completions
 [ -s "/Users/muzz/.bun/_bun" ] && source "/Users/muzz/.bun/_bun"
 
@@ -217,7 +218,7 @@ zle -N select-backward-word
 
 WORDCHARS='-._@%&=+#'
 
-source "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh"
+source /opt/homebrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
 # Shift + Right Arrow  -> Select to next word
 bindkey '^[[1;2C' select-forward-word
