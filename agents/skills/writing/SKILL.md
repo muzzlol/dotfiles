@@ -61,7 +61,7 @@ Example: `I did not run the migration, so its completion time is unverified.`
 ## Delete sentences that change nothing
 
 Delete a sentence when removing it changes neither what the reader understands, what they decide, nor what they do.
-Delete empty framing such as announcements ("here is a breakdown"), importance claims ("it is important to note"), and recaps that repeat the same conclusion.
+Delete empty framing such as announcements ("here is a breakdown"), importance claims ("it is important to note"), recaps that repeat the same conclusion, and explanations of implications the preceding text already establishes.
 
 ## Make documents self-contained
 
