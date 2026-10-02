@@ -15,7 +15,7 @@ When a document must both describe and direct, include explanation inside the pr
 
 ## Order and form
 
-When answering a direct question, state the answer first if the reader can understand it without a missing premise. Otherwise, state the required premise first.
+When answering a direct question, state the answer first if the reader can understand it without a missing premise. Otherwise, start from what the reader already knows, not from what you just learned.
 
 Apply the same order to every unit: open each section and each paragraph with its point, and let the rest of the unit support or qualify it. Break a paragraph where the idea changes; add headings only when the structure is complex enough that the reader must navigate.
 
@@ -43,9 +43,10 @@ Choose form from the relationship between the information:
 ## Choose precise, familiar words
 
 - Use the most familiar word that preserves the exact meaning. Do not trade precision for simplicity or use inflated wording for status.
-- When only an unfamiliar technical term is precise enough, explain its role before relying on its name.
-- Once a thing has a name, reuse that name. Do not rotate synonyms for variety.
+- Explain anything not yet established and not obvious before relying on it. Cut it if the point survives without it.
+- Use the same word for the same thing throughout the conversation. Before adding a term, check whether a word already defined will do. If the reader needs both terms, show the difference with an example.
 - Replace labels such as "safe", "fast", "simple", and "robust" with the behavior, mechanism, or measurement that supports them.
+- Do not rank options by a cost you have not checked.
 - Anchor a category with an instance in parentheses (importance claims ("it is important to note")). An unanchored category lets each reader draw its boundary differently.
 
 Vague: `The retry behavior is robust.`
@@ -60,7 +61,7 @@ Example: `I did not run the migration, so its completion time is unverified.`
 
 ## Delete sentences that change nothing
 
-Delete a sentence when removing it changes neither what the reader understands, what they decide, nor what they do.
+Delete a sentence when the answer, and what the reader decides or does, survive without it.
 Delete empty framing such as announcements ("here is a breakdown"), importance claims ("it is important to note"), recaps that repeat the same conclusion, and explanations of implications the preceding text already establishes.
 
 ## Make documents self-contained

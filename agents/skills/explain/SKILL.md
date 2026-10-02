@@ -1,53 +1,61 @@
 ---
 name: explain
-description: Explain code or a change in plain language so the reader can judge it. Use when the user asks how code works, asks what changed, or wants a walkthrough; before work that adds or changes a multi-step code flow; and without being asked after finishing a nontrivial feature or fix.
+description: >-
+  Explain code and changes in plain language.
+  Use when the user asks how code works, what changed, or for a walkthrough.
+  When adding or changing a multi-step code flow, explain the planned flow before
+  editing and the resulting behavior afterward, even without a request.
 ---
 
-The reader is the decision-maker. State the situation before the mechanism: who is doing what, then the one path that answers. An explanation exists to arm their judgment — a misunderstanding is worse than a gap, a negative multiplier on every decision built on it. The prose itself — ordering, sentence craft, form, register — follows the writing skill; this skill adds what explaining code demands.
+Help the reader judge the code. Follow the [writing skill](../writing/SKILL.md) for prose; this skill covers what code explanations need to include.
 
-## Zoom, don't chapter
+## Start with the whole story
 
-Chapters (file-by-file, backend-then-frontend) read halfway give half a story. Zooms tell the whole story at every level, each pass sharper. Reason through up to four zooms in order, including only what the reader and artifact need. They are a reasoning order, not an output template: when the requested artifact has its own structure or writing guide, that controls the headings and organization; the zooms decide what earns inclusion and where it appears. Default output is situation plus enough flow to judge. Do not ship the zoom inventory.
+Give the whole story before any detail. A file-by-file or backend-then-frontend tour leaves the reader with half of it. Answer at the level of the question, not of your investigation.
 
-1. **Governing idea** — the one fact the rest derives from, stated first (e.g. "billing is in arrears" generates: no refunds, invoice-immediately, why a preview endpoint exists). Test: could the reader predict most of the remaining detail from it? When no generating fact exists, don't manufacture one — open with what the change does and why it was wanted. For a change, the governing idea is a claim about the author's intent: back it with stated rationale or mark it as your read, because a diff always looks like it has one theme whether or not the author had one.
-2. **Flow** — behavior as information: what data exists, how it transforms, how it reaches the user. The form choice follows the writing skill's shape rules; the option explanations add is a sketch — arrows, a grid, a numbered sequence — when faithful prose would make the reader build that structure in their head.
-3. **Pieces** — each mechanism mapped back onto the flow, file path attached as an address.
-4. **Judgment surface** — the material, contestable decisions the code embeds, each stated so the reader can veto or bless it: policies encoded, tradeoffs taken, defaults chosen. Surface only decisions that help the intended reader judge the subject. Put each beside the behavior it governs by default; create a standalone decisions section only when grouping them materially improves understanding. Omit decisions that repeat the artifact, are too implementation-specific for its audience, or fall outside its purpose. A veto needs a target: state the alternative that was live and what switching would cost, so the reader rejects a decision toward something, not just away from it. When files were created or moved, the carving is itself a decision when it materially affects the design — name it and defend it (durable domain object, or task-shaped?). Mark what you are unsure of; a confident gloss is the misunderstanding this skill exists to prevent.
+Cover these in order, skipping what the reader doesn't need:
 
-Verdicts normally come last because judging requires understanding: each zoom is the most valuable thing *given what has already been read*. Lead with the verdict only when every premise it depends on is already in the thread.
+1. **Main idea**: For a change, say what the code does now and why, then the problem, then the fix.
+2. **Flow**: Show how values are built, passed, and returned between functions. For a multi-step path, draw a diagram as described in **Draw the code flow**.
+3. **Decisions**: Name each choice the reader might challenge, such as a policy, tradeoff, or default, beside the behavior it affects. When it helps the reader judge a choice, name the alternative and the cost of switching. Group decisions only when that reads more easily. When file boundaries affect a decision, explain why the code is split that way.
 
-## Show code flow before editing
+Show changed signatures, types, calls, components, or files in a `diff` block, with enough context to show ownership and order. When most of a block is new, a partial diff would lose context, or the reader needs to copy it, show the whole block.
 
-Before the first code edit, when the work adds or changes a multi-step code path, trace the current code and show the plan as a flow diagram. Do not force it into a table or a straight call stack. Draw the real shape: direct calls, choices, loops, work that overlaps, waits, and work handed off through queues, events, streams, or callbacks.
+## Draw the code flow
 
-For each affected flow:
+When an explanation covers a multi-step code path, draw it as a diagram. Before the first edit that adds or changes one, trace the current code and diagram the plan. If the code ends up different, update the diagram in the final explanation.
 
-- A new flow gets **Planned** and `new; no before version`. A changed flow gets **Before** and **After**, either as two diagrams or one diff diagram using `[+]`, `[-]`, and `[~]`. A removed flow gets **Before** and `After: removed`.
-- Put the real function or method signature inside each layer from the project's code, and show its file path next to it. The signature shows the input and output. If the code has no written type names, show the value shape found in the code. Expand a large type once in a type legend instead of repeating its fields.
-- Draw an error where it starts. Show where code catches it, turns it into another error, retries, or falls back. In plain text, `──╳ Error` may mean the error travels back to the caller until a handler is drawn.
-- Draw each side effect as an arrow to the thing that changes, with the action on the arrow: for example, `══ INSERT ══▶ [users database]`. Include memory or stored data changes, files, network calls, queues, events, logs, and metrics.
-- Use numbers only when calls have an order. For work that can overlap, draw a fork and join, name the real code such as `Promise.all` or `asyncio.gather`, and show whether it waits for all work, the first result, a set number of results, or nothing. Show timeouts and cancellation when they matter.
-- Put the real condition on a branch and the real operation on a loop, retry, transaction, lock, queue, event, stream, or callback edge. Do not invent a fixed symbol for every kind of program.
-- Add a small legend that explains only the marks used in that diagram. A missing error line or side-effect arrow means the code was checked and none was found; use `?` when current behavior is still unknown or a planned choice is still open.
+Draw the real shape, not a table or a straight call stack:
 
-If the code ends up different from the plan, fix **After** in the final explanation. The diagram is done when every added, changed, or removed flow is shown and the reader can see each layer's input, output, errors, side effects, order, branches, and wait behavior without opening the code.
+- **Layers**: Put the real signature from the project's code in each layer, with its file path. Where the code has no type names, show the value shape. List each project-defined type passed between layers once in a type legend, with every field.
+- **Order**: Number calls only when order matters. For overlapping work, draw a fork and join, name the real code (`Promise.all`, `asyncio.gather`), and show whether it waits for all, the first, some number, or none. Show timeouts and cancellation when they matter.
+- **Edges**: Label each branch with its real condition, and each loop, retry, transaction, lock, queue, event, stream, or callback with its real operation. Don't invent a fixed symbol for every kind of program.
+- **Errors**: Draw each error where it starts and where it is caught, converted, retried, or falls back. In plain text, `──╳ Error` can mark an error that travels to the caller until a handler is drawn.
+- **Side effects**: Draw each as an arrow labeled with the operation, pointing to its exact target: `── INSERT ──▶ [Tenant table]`.
+- **Legend**: Explain only the marks used. A missing error or side-effect arrow means you checked and found none. Use `?` for unknown behavior or an open choice.
+
+The diagram is done when it shows every flow the explanation covers, including added, changed, and removed ones, and the reader can see each layer's input, output, errors, side effects, order, branches, and waits without opening the code.
 
 ## Defaults
 
-Apply these defaults when the situation is not already in the thread; depart when the reader's message already stated it. The general prose defaults — plain words, local completeness, concrete anchors, performative text cut — live in the writing skill; these are the ones explaining code adds.
+Apply these unless the reader already supplied the context.
 
-- **Correct the tempting wrong model.** Call out behavior that a newcomer would reasonably predict incorrectly.
-- **Close the causal chain.** Trace the path from input or trigger through each consequential decision and state change to the observable result. Do not hide a missing step behind "then" or "eventually."
-- **Traced, or labeled.** A behavioral claim rests on code read, a diff compared, or a run observed, never on what the change plausibly does. Flag the claims you didn't trace.
-- **Separate behavior from intent.** Code shows what happens, but rarely proves why it was designed that way. Cite documented rationale, label inferences, and say when the reason is unknown.
-- **Explanation noise.** Line numbers, identifier inventories, and test-by-test recitals are noise unless asked for; summarize validation evidence and material gaps because they affect judgment.
-- **Depth extends along the zooms.** Stop when the artifact has answered the request; when the reader pulls more, extend in zoom order rather than inventorying detail.
-- **Changes anchor in the before.** When the subject is a delta rather than existing code: previously X, now Y — behavior first, then mechanism.
+- **Stop at signatures**: Describe code inside a function only when it does something its signature hides, such as writing to storage, calling the network, changing an argument, or throwing an undeclared error. Flag each case as a mismatch between signature and behavior.
+- **Correct likely misconceptions**: Call out behavior a newcomer would reasonably predict wrong.
+- **Trace cause and effect**: Follow the trigger through each decision and state change that matters, to the observable result. Don't hide a step behind "then" or "eventually."
+- **Back behavioral claims**: Base each on code read, a diff compared, or a run observed. Flag claims you haven't traced.
+- **Separate behavior from intent**: Code shows what happens, rarely why. Cite documented rationale, label inferences, and say when the reason is unknown.
+- **Summarize validation**: Give the evidence and material gaps. Unless asked, omit line numbers, identifier inventories, and test-by-test accounts.
 
 ## Quality check
 
-A strong explanation passes the writing skill's check — above all its cut test — and the material, contestable decisions needed to judge the code appear where they clarify the subject; no standalone judgment section is required.
+Apply the writing skill's draft check and cut test. Check that the decisions needed to judge the code appear beside the relevant behavior or in a useful group.
 
 ## When the reader doesn't understand
 
-A confused reader is a failed run. Fix their understanding first, then diagnose the miss. If skipping a relevant default caused the confusion, apply it; sharpen its wording only when the instruction itself was ambiguous. If the defaults were applied appropriately and the reader still got lost, the skill has a gap — only that earns a new line. Route the fix: a general prose miss (ordering, sentence craft, register) belongs in the writing skill; an explaining-code miss belongs in this skill. Edit under the discipline of the proompting skill, and tell the reader what you changed: the edit is itself a contestable decision. An instruction appended per confusion is sediment, not learning.
+Resolve the reader's confusion first, then diagnose the cause:
+
+- If you skipped a relevant default, apply it. Revise its wording only if it was ambiguous.
+- If you applied the relevant defaults correctly and the reader still got lost, add guidance for the uncovered gap.
+
+Put general prose fixes in the writing skill and code-explanation fixes here.

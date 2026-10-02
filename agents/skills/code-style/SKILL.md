@@ -9,7 +9,7 @@ description: TypeScript style rules. Use when writing, refactoring, or reviewing
 
 Remove complexity first, then build. Deletion reveals the structure an addition will sit on.
 
-- First try to satisfy the requirement by improving or removing existing code. Add new code only when the requirement cannot be satisfied that way.
+- First try to satisfy the requirement by improving, removing, or reusing existing code; search the repo for code that already does the job before writing any. Add new code only when the requirement cannot be satisfied that way.
 - A function, type, or format change updates every in-repo use and removes the old path.
   - Retain compatibility only for a named dependency that cannot be updated in the same change (ask if the repository cannot establish whether one exists). Document who needs the old path and its removal condition, or name the contract when support is indefinite.
 - Validators, guards, retries, or config options must address a named production scenario (a test is not one).
@@ -31,7 +31,7 @@ Good: `The unique index fails on 14 duplicate emails, all double-submits. Two wa
 - Branch on expected failure states when the API exposes them. Catch only expected failures the API reports by throwing, and keep work whose failure would be a bug outside the `catch`. Ignore a caught error only when losing that work is an explicit part of the function's behavior.
 - Main function reads as the happy path; helpers below it, close to their use. Extract only to name a real concept or for reuse — no preemptive single-use helpers, never split a simple expression.
 - Inline a value used once unless its name explains a non-obvious expression.
-- `flatMap`/`filter`/`map` for pure transforms; `for...of` for ordered side effects and mutation. `await` inside a loop only when order or serialization matters (a transaction, a rate limit); independent calls go through `Promise.all` or a bounded-concurrency helper. Type-guard `filter` callbacks to keep inference.
+- Prefer returning calculated or transformed values over mutating caller-owned inputs; mutation is appropriate when applying changes is the function's purpose. `flatMap`/`filter`/`map` for pure transforms; `for...of` for ordered side effects and mutation. `await` inside a loop only when order or serialization matters (a transaction, a rate limit); independent calls go through `Promise.all` or a bounded-concurrency helper. Type-guard `filter` callbacks to keep inference.
 
 ## Types
 
@@ -70,6 +70,7 @@ const orgId = integrationData.orgId
 
 ## Modules
 
+- Never edit lockfiles manually; regenerate them with the package manager.
 - Deep modules: a layer earns its place when deleting it would spread complexity across callers. Delete layers that only forward calls or move complexity elsewhere.
 - Fixes belong in the module that owns the invariant (even if far from where a bug showed up). If a fix already exists elsewhere, move it instead of adding another copy. If a verified blocker prevents the move, tell the user where the fix belongs, what blocks the move, and where it remains temporarily.
 - Keep one source of truth. Derive values instead of storing them: a draft invoice total is `sum(lines)`.
@@ -81,7 +82,9 @@ const orgId = integrationData.orgId
 
 - Within a domain, one name per concept and one concept per name.
   - A generic name may refer to different concepts when its module or type makes the meaning clear.
-- Name files and code around durable domain nouns. Task-shaped names (`fix-review-dedup.ts`, `new-flow-helper.ts`) are bad.
+- Name files, types, and database models for the domain concept they own. Extend the existing owner before creating a module; a new module needs a distinct responsibility.
+- Use the simplest name that is unambiguous at its use site. Let the owning module supply context; add qualification when that context is absent.
+- Keep tickets, feature nicknames, and implementation approaches out of shared domain names.
 - Once an approach is rejected or a concept is removed, remove its code and comments.
 
 ## Errors & logging
@@ -97,5 +100,5 @@ const orgId = integrationData.orgId
 
 ## Writing — comments, docs, PRs
 
-- Default to no code comments. Remove low-information comments in and around code you change, even when surrounding code uses them. Keep only comments that explain a non-obvious reason, constraint, or invariant.
+- Default to no comments. Keep one only for a current constraint that isn't evident from code or tests and could prevent a plausible wrong edit.
 - In docs and PRs, keep a line only if cutting it would make a reader reopen a settled decision, miss intent, repeat costly discovery, or pick the wrong next step.
