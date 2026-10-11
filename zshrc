@@ -9,6 +9,7 @@ export PATH="/opt/homebrew/bin:$PATH"
 export PATH="$PATH:/Users/muzz/.local/bin"
 export PATH="/Applications/OrbStack.app/Contents/Resources/bin:$PATH"
 export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
+export PATH="/opt/homebrew/opt/ffmpeg-full/bin:$PATH"
 export PATH=$PATH:/opt/puppetlabs/bin
 export PATH="$HOME/bin:$PATH"
 
