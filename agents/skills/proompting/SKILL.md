@@ -42,7 +42,10 @@ Repeated resource discovery, polling or turn coordination, transcription, duplic
 ## Prompt design
 
 - State behavior and fallback directly. Include rationale only when needed for scope, purpose, or a tradeoff.
-- Supply completion requirements and environment facts the model cannot derive. For model judgment, state a criterion instead of a proxy quota: "flag when length hurts cohesion," not "flag functions over 50 lines."
+- Supply completion requirements and environment facts the model cannot derive. For model judgment, state a criterion instead of a proxy such as a quota or a list of cases: "flag when length hurts cohesion," not "flag functions over 50 lines."
+- When a widely known convention already encodes the criterion, name it instead of redefining it, and state only where yours differs. For a support agent drafting customer replies:
+  - Bad: `Don't leak internals: correlation IDs, tenant IDs, service names, table names.` The agent treats the list as the boundary, so unlisted internals get through.
+  - Better: `Explain what went wrong, how it affects the customer, and what we're doing about it, at the depth of a public status-page update. Unlike a status page, also tell them what to change in their own settings.`
 - Use examples only to resolve ambiguity or convey judgment or style. Keep them valid and representative, remove incidental details, and pair bad examples with corrections.
 - Keep only cross-task guidance always loaded. Put conditional guidance behind a pointer that says when to load it, and test routing when failure would matter. Put tool-specific behavior in tool definitions and only cross-tool policy in shared prompts. For skills, follow `skill-format`.
 - Treat rule count, placement, repetition, formatting, emphasis, capitalization, emotion, politeness, example count, and reasoning directives as model- and task-specific, not universal. Evaluate whether a rule changes target-model behavior. When adherence is weak, delete low-value rules before restyling survivors; for a costly buried-rule failure, compare beginning and end placement.
