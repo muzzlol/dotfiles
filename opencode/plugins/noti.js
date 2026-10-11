@@ -1,5 +1,5 @@
-import { homedir } from "os";
-import { join } from "path";
+import { homedir } from "node:os";
+import { join } from "node:path";
 
 const sounds = {
 	bonk: "bonk.mp3",
@@ -9,39 +9,37 @@ const sounds = {
 
 const activeSound = sounds.bonk;
 
-export const NotificationPlugin = async ({ $, client }) => {
-	// Check if a session is a main (non-subagent) session
-	const playSound = async ($, filename) => {
-		if (!filename) return;
-		const path = join(homedir(), `.config/opencode/sounds/${filename}`);
-		await $`afplay ${path}`;
-	};
+const playSound = async (filename) => {
+	if (!filename) return;
 
-	const isMainSession = async (sessionID) => {
-		try {
-			const result = await client.session.get({ path: { id: sessionID } });
-			const session = result.data ?? result;
-			return !session.parentID;
-		} catch {
-			// If we can't fetch the session, assume it's main to avoid missing notifications
-			return true;
-		}
-	};
+	const path = join(homedir(), ".config/opencode/sounds", filename);
+	const process = Bun.spawn(["/usr/bin/afplay", path], {
+		stderr: "ignore",
+		stdout: "ignore",
+	});
+	await process.exited;
+};
 
+export default async function NotificationSoundPlugin({ client, directory }) {
 	return {
 		event: async ({ event }) => {
-			// Only notify for main session events, not background subagents
-			if (event.type === "session.idle") {
-				const sessionID = event.properties.sessionID;
-				if (await isMainSession(sessionID)) {
-					await playSound($, activeSound);
-				}
-			}
+			if (event.type !== "session.idle" && event.type !== "permission.updated") return;
 
-			// Permission prompt created
-			if (event.type === "permission.asked") {
-				await playSound($, activeSound);
+			const sessionID = event.properties?.sessionID ?? event.properties?.sessionId;
+			if (!sessionID) return;
+
+			try {
+				const response = await client.session.get({ path: { id: sessionID } });
+				const session = response?.data ?? response;
+
+				// A global plugin is instantiated for each active location. Only the
+				// owning instance should notify, and subagent completions stay quiet.
+				if (session?.directory !== directory || session?.parentID) return;
+
+				await playSound(activeSound);
+			} catch (error) {
+				console.error("notification plugin failed", error);
 			}
 		},
 	};
-};
+}
