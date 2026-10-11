@@ -43,7 +43,7 @@ Give no opinion on the items; the fixer judges them against the code.
 
 When it returns:
 
-1. **Audit.** Run `git reset <fixer's start>`, which turns the fixer's commits back into uncommitted changes beside the ones exec's subagents left unstaged, and frees any noted file a fixer commit swept up. `git-hunk scan --mode stage --json` then lists every change with its `change_key`, new files included. Approve a change only when a ledger entry marked `fixed` or a failing check the fixer reports fixed requires it, or it is a small, local fix from exec's own reviewers. A test change must pin behavior a fix changed. Never approve a noted file.
+1. **Audit.** Run `git reset <fixer's start>`, which turns the fixer's commits back into uncommitted changes beside the ones exec left unstaged, and frees any noted file a fixer commit swept up. `git-hunk scan --mode stage --json` then lists every change with its `change_key`, new files included. Approve a change only when a ledger entry marked `fixed` or a failing check the fixer reports fixed requires it, or it is a small, local fix from exec's review step. A test change must pin behavior a fix changed. Never approve a noted file.
 2. **Commit** only the approved changes: `git-hunk commit --snapshot <id> --change-key <key>… -m "<subject that says what the fixes do>"`. Then stash every path still changed except the noted files: `git stash push --include-untracked -m "goop: unapproved, fixer <n>" -- <paths>`, so the next fixer starts clean and nothing a fixer wrote is lost.
 3. **Post** with `bun <this skill's directory>/goop.ts respond <ledger>`. It replies on each item, resolves fixed threads, and skips any thread someone else resolved meanwhile.
 
