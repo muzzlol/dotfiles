@@ -18,6 +18,7 @@ Subagents
 Inspect the scope enough to decide which focuses below apply and how to split them across reviewers:
 - Skip a focus only when the scope cannot contain its issues, such as performance for a change with no runtime code. When unsure, keep it.
 - One reviewer can take every applicable focus when it can apply each in depth across the whole scope. Split when a single reviewer would cover some focuses or parts of the scope only superficially. When unsure, give each focus its own reviewer.
+  - Split a focus by scope only where its issues cannot cross the split: a duplicate can span two files, so one reviewer must see every file it could span.
 Done when every applicable focus is assigned to reviewers that together cover the whole scope.
 
 Launch the reviewers read-only, on the same model as the parent, in parallel when there are several. Pass each one its focus text, scope handles such as paths, symbols, or commit SHAs, plus only context they cannot cheaply derive themselves. Reviewers gather their own diffs and evidence; pass content only when they cannot access it, such as a user-pasted diff.

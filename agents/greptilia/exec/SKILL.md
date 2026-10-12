@@ -3,62 +3,49 @@ name: exec
 description: Do a task without tests, commit it on a new branch, explain it, then run Greptile review, simplify, and tests on it.
 ---
 
-Run the task given after `/exec` end to end.
+Unless the task is a test change, ignore tests until step 6: don't write, edit, run, read, or mention them, or shape code around them.
 
-Do every step yourself by default. Hand a job to a subagent only when doing it yourself would cost more than briefing an agent, letting it rebuild your context, and checking its result. A fix you can make in a few edits never qualifies, and neither does waiting on a command: run the command in the background and keep working. Run agents in parallel only when neither can change the other's result.
+Do every step yourself by default. Hand a job to a fresh subagent (not a fork) only when it is independent, sharing no files, inputs, or decisions with the rest of the work, and doing it yourself would cost more than briefing it, letting it rebuild your context, and checking its result. A fix you can make in a few edits never qualifies, and neither does waiting on a command: run the command in the background and keep working. Give related jobs to one agent. Brief it with its job and only what it can't derive. It loads `code-style`, never stages or commits, and reports anything outside its job under Needs a decision.
 
-A delegated agent is a fresh subagent, not a fork. It receives the commit SHA, the base branch, its job, and only context it cannot cheaply derive itself. It loads `code-style`, never stages or commits, and leaves changes unstaged. It acts within its mandate and reports anything else, such as a conflict with its base branch, under Needs a decision, each item in the form the `writing` skill's DECISIONS.md lays out.
+## 1. Work
 
-## 1. Style
+Load `code-style`, then do the task as given.
 
-Load the `code-style` skill before reading or editing code.
+## 2. Commit
 
-## 2. Work
+Commit every change the work made to a new branch off `HEAD`, named for the task in kebab-case. Add a body only for a why the diff can't show.
 
-Do the task as given. Unless the task is itself a test change, tests do not exist for this step: do not write, edit, run, or read them; do not raise them or shape code for them.
+## 3. Start Greptile
 
-## 3. Commit
+Skip this step and step 5 when the commit changes no behavior or meaning, such as a typo or formatting fix.
 
-- Branch off the current HEAD, named for the task in kebab-case.
-- Commit every change the work made.
-- Imperative subject under 72 characters. Body only for a why the diff cannot show.
+In the background, run `greptile review -b <base> <effort> --json`, with effort from the number of files changed since the merge base: 10 or fewer, no flag; 11–27, `--plus`; over 27, `--apex`. Add `--instructions "Ignore tests. Focus on the rest."` unless the task is a test change.
 
-Done when the tree holds nothing from the work and `git log -1` shows the commit.
+## 4. Explain
 
-## 4. Start Greptile
+Load `explain` and explain the whole commit. The conversation sets the level, not the coverage.
 
-When the commit only changes tests or docs, skip this step and step 6.
+## 5. Review fixes
 
-Load `greptile-cli`. Pick effort the way prod auto does, from `git diff --name-only $(git merge-base <base> HEAD) HEAD | wc -l`: 10 or fewer files, no flag; 11–27, `--plus`; over 27, `--apex`. Start `greptile review -b <base> <effort flag> --instructions "Ignore tests. Focus on the rest." --json` as a background command, then go on to step 5.
+Fix a finding only when it is unequivocally correct and the fix is small and local; record every other finding with its severity for the report. Leave every fix unstaged.
 
-## 5. Explain
+- **Simplify.** Load `simplify`, scoped to the commit, and apply its findings under this rule instead of its no-edit default.
+- **Greptile.** When the background review exits, apply its findings under the same rule.
+Done when every finding is fixed or recorded.
 
-Load the `explain` skill and explain the whole commit. The conversation sets the level, not the coverage: build on the vocabulary, code, and concepts the user already holds, and leave nothing out because it was discussed before.
+## 6. Tests
 
-## 6. Review fixes
-
-Fix a finding only when it is unequivocally correct and the fix is small and local; record every other finding with its severity for the report. Tests are out of scope. Leave every fix unstaged.
-
-- **Simplify.** Load `simplify`, scoped to the commit, and apply its findings under the rule above; that rule replaces simplify's own no-edit default.
-- **Greptile.** When the background review exits, apply its findings under the same rule. A non-zero exit means the review did not finish; record that for the report.
-
-Done when every finding is fixed or recorded and every agent you delegated to has reported.
-
-## 7. Tests
-
-Run after step 6 so the suite runs against the fixed tree.
-
-- Default is no new tests. Add one only when it exercises behavior the commit adds or changes, its shape needs no user input, and the scaffolding exists; otherwise skip and report why in one line.
-- From the root, run once the narrowest tests that cover the change and its importers: the touched workspace's narrowest test script; `NODE_ENV=test bunx turbo run test --filter='...[<base>]'` if a shared package's exports changed; `PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=yes bun run test:integration:local` only if the change touches what integration tests exercise. If unsure, go broader. Skip runs that already passed on the committed tree.
-- No extra flags. Bun prints only failures and a summary; read that.
-- A failure in code the commit doesn't touch: rerun that file alone once; if it still points away from the commit, report it as unrelated and don't fix it. If it stopped a workspace's `&&` test chain, run the chain's remaining scripts once, in one command.
-- Make the commit's failures pass. After a fix, rerun only the test files that failed or that you edited; never rerun the full suite or turbo to confirm.
+- Add a test only when it exercises behavior the commit adds or changes, its shape needs no user input, and the scaffolding exists; otherwise say in one line why not.
+- From the root, run once the narrowest tests that cover the change and its importers: the touched workspace's narrowest test script; `NODE_ENV=test bunx turbo run test --filter='...[<base>]'` if a shared package's exports changed; `PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=yes bun run test:integration:local` only if the change touches what integration tests exercise. If unsure, go broader.
+- Run them without extra flags; Bun prints only failures and a summary.
+- For a failure in code the commit doesn't touch, rerun that file alone once; if it still points away from the commit, report it as unrelated and leave it. If it stopped a workspace's `&&` test chain, run the chain's remaining scripts once, in one command.
+- Make the commit's failures pass. After a fix, rerun only the test files that failed or that you edited.
 
 Done when every chosen run has passed or its failure is reported as unrelated.
 
-## 8. Report
+## 7. Report
 
-Load the `writing` skill. One message. Same audience rule as step 5, counting the explanation and anything discussed since. Grouped, plain titles, one or two lines each.
+Load `writing`. One message, grouped, one or two lines per item:
 
 - Fixed, unstaged: what and where.
 - Needs a decision: each item in the form the `writing` skill's DECISIONS.md lays out.

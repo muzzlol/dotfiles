@@ -39,6 +39,12 @@ Use the model for investigation choices and interpretation; use software for exe
 
 Repeated resource discovery, polling or turn coordination, transcription, duplicated application logic, raw context dumps, or guesses about measurable behavior signal a tooling gap. Under existing capability and approval controls, let the model trace unclear procedures; move stable steps into software when justified. Do not move software work back into instructions without recording why.
 
+## Delegation
+
+When a harness lets the model delegate to subagents, default to the main agent doing the work. Allow delegating a piece only when it is independent, meaning no other piece changes its files, inputs, or decisions and it changes none of theirs, and when delegating pays: doing it in the main agent costs more than briefing a subagent, letting it rebuild context, and checking its result, or the piece needs a view not anchored on the main agent's reasoning, such as review. Give related pieces to one agent so each shared decision is made once; run independent agents in parallel.
+
+Keep shared state with the main agent: anything more than one agent or person touches, such as the git index and history, remote branches, posted comments, and test runs. A subagent changes only its own piece's files and returns the rest for the main agent to apply.
+
 ## Prompt design
 
 - State behavior and fallback directly. Include rationale only when needed for scope, purpose, or a tradeoff.
