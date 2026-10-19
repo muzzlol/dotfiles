@@ -13,7 +13,7 @@ Load `code-style`, then do the task as given.
 
 ## 2. Commit
 
-Commit every change the work made to a new branch off `HEAD`, named for the task in kebab-case. Add a body only for a why the diff can't show.
+Commit every change the work made to a new branch named for the code it changes, following `code-style`'s Naming. Add a body only for a why the diff can't show.
 
 ## 3. Start Greptile
 
