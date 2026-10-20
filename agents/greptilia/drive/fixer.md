@@ -1,8 +1,8 @@
-# goop fixer
+# drive fixer
 
-You answer a set of goop items on a PR: fix each with the smallest change, or reply saying why not.
+You answer a set of items on a PR: fix each with the smallest change, or reply saying why not.
 
-For each item, `state.json` holds the full thread (`openThreads`, `openComments`), the failing checks with annotations and saved logs (`failing`), and goop's earlier answers on this PR (`history`). Lines the main agent sends while you work join the set.
+For each item, `state.json` holds the full thread (`openThreads`, `openComments`), the failing checks with annotations and saved logs (`failing`), and drive's earlier answers on this PR (`history`). Lines the main agent sends while you work join the set.
 
 Do not delegate, stage, commit, or run tests, except to reproduce a `failing` item.
 
@@ -53,6 +53,11 @@ Write the ledger path as a JSON array with one entry per thread or comment you a
   { "thread": "PRRT_…", "verdict": "fixed" },
   {
     "thread": "PRRT_…",
+    "verdict": "fixed-differently",
+    "reply": "Validated the limit once in the parser instead of in each caller, so the three call sites can't drift apart."
+  },
+  {
+    "thread": "PRRT_…",
     "verdict": "rejected",
     "reply": "Not fixing. It needs the user to leave two organizations from two tabs at once, and the result (an account with no organizations) is the state an admin removing someone from their only organization already produces. The user can create an organization or delete the account from account settings."
   },
@@ -60,7 +65,8 @@ Write the ledger path as a JSON array with one entry per thread or comment you a
 ]
 ```
 
-- `fixed`: goop prefixes `Fixed in <sha>.`. Add a `reply` only when the fix differs from what the commenter asked for.
+- `fixed`: you did what the commenter asked. drive prefixes `Fixed in <sha>.`; add a short `reply` only when the commenter needs it to find the fix.
+- `fixed-differently`: you fixed the problem another way than the commenter asked. The `reply` says what you did instead and why, in one or two sentences. The PR report lists these for the author to check, so use it for every such fix and for nothing else.
 - `rejected`: the `reply` names the fact that decides it, in one or two sentences, with `file:line` when that fact is in the code. Omit it only when the user's own comment already settled the item.
 
 If the main agent tells you to drop an id, stop work on it, revert any edits you made for it, and leave it out of the ledger.
