@@ -21,7 +21,7 @@ Software guarantees only properties correctly enforced at unavoidable points. Be
 
    **Done when:** every item has a result, scope, support, and evidence; applicable fallbacks, exceptions, conflicts, and policy gaps are explicit; and no behavior-changing term depends on unstated interpretation.
 
-3. **Assign controls.** Map each requirement to a mechanism that can decide it: capability restriction, authorization or approval, deterministic validation or repair, semantic review, or prompt guidance. A model-judgment rule needs a trigger, action, exceptions, and an unsure fallback such as ask, abstain, or escalate; "be careful" is not a control.
+3. **Assign controls.** Map each requirement to a mechanism that can decide it: capability restriction, authorization or approval, deterministic validation or repair, semantic review, or prompt guidance. A model-judgment rule needs a trigger, action, exceptions, and an unsure fallback such as ask, abstain, or escalate; "be careful" is not a control. Give an action the model would otherwise skip, such as unprompted extra work, a trigger it can check: a trigger it must judge lets it decide the action doesn't apply.
 
    **Done when:** every requirement has a control, and no externally decidable costly failure relies on prompt text.
 
@@ -29,7 +29,7 @@ Software guarantees only properties correctly enforced at unavoidable points. Be
 
    **Done when:** every prompt requirement has one supported, nonduplicative governing instruction.
 
-5. **Evaluate where it matters.** Compare baseline and candidate when a model-sensitive choice involves costly or repeated failures, or its effect is uncertain. Use representative, edge, adversarial, and regression cases; repeat runs when outputs vary.
+5. **Evaluate where it matters.** Compare baseline and candidate when a model-sensitive choice involves costly or repeated failures, or its effect is uncertain. Use representative, edge, adversarial, and regression cases, including cases where the guidance should change nothing (a rule that asks for a report when something happens can draw reports that it didn't); repeat runs when outputs vary. For guidance in conditionally loaded material, test loading and adherence separately, and confirm from each run's transcript which version of the material it loaded.
 
    **Done when:** each target choice is tested or marked untested with its uncertainty and residual risk.
 
@@ -54,7 +54,7 @@ Keep shared state with the main agent: anything more than one agent or person to
   - Better: `Explain what went wrong, how it affects the customer, and what we're doing about it, at the depth of a public status-page update. Unlike a status page, also tell them what to change in their own settings.`
 - Use examples only to resolve ambiguity or convey judgment or style. Keep them valid and representative, remove incidental details, and pair bad examples with corrections.
 - Keep only cross-task guidance always loaded. Put conditional guidance behind a pointer that says when to load it, and test routing when failure would matter. Put tool-specific behavior in tool definitions and only cross-tool policy in shared prompts. For skills, follow `skill-format`.
-- Treat rule count, placement, repetition, formatting, emphasis, capitalization, emotion, politeness, example count, and reasoning directives as model- and task-specific, not universal. Evaluate whether a rule changes target-model behavior. When adherence is weak, delete low-value rules before restyling survivors; for a costly buried-rule failure, compare beginning and end placement.
+- Treat rule count, placement, repetition, formatting, emphasis, capitalization, emotion, politeness, example count, and reasoning directives as model- and task-specific, not universal. Evaluate whether a rule changes target-model behavior. When adherence is weak, delete low-value rules before restyling survivors; for a costly buried-rule failure, compare beginning and end placement. If the model read the rule and judged it inapplicable, placement won't help; fix the trigger.
 - Constrain output to consumer requirements. If that harms quality, evaluate solving first and formatting second.
 
 ## Tool and interface design
@@ -79,8 +79,8 @@ Keep shared state with the main agent: anything more than one agent or person to
 ### Evidence
 
 - Label advice as guaranteed by construction, environment or product fact, cross-model empirical result, model-and-task-specific result, or untested hypothesis.
-- Apply established, low-cost defaults directly. Record the tested model and version, and rerun relevant evaluations after changes that may affect them.
-- Acceptance criteria may inspect source files, execution state, tool logs, and side effects, not only final text. Treat citations as evidence only after checking that their sources exist and support the claim; never treat generated reasoning as proof.
+- Apply established, low-cost defaults directly. Record the tested model and version, and rerun relevant evaluations after changes that may affect them. [EVIDENCE.md](EVIDENCE.md) holds this skill's own results; read the entry behind a rule before changing it.
+- Acceptance criteria may inspect source files, execution state, tool logs, and side effects, not only final text. Treat citations as evidence only after checking that their sources exist and support the claim; never treat generated reasoning, or a model's report that it followed a rule, as proof.
 
 ## Done when
 

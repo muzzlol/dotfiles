@@ -7,13 +7,15 @@ Unless the task is a test change, don't write, edit, run, read, or mention tests
 
 Do every step yourself by default, except step 6's tests. Hand any other job to a fresh subagent (not a fork) only when it is independent, sharing no files, inputs, or decisions with the rest of the work, and doing it yourself would cost more than briefing it, letting it rebuild your context, and checking its result. A fix you can make in a few edits never qualifies, and neither does waiting on a command: run the command in the background and keep working. Give related jobs to one agent. Brief it with its job and only what it can't derive. It loads `code-style`, never stages or commits, and reports anything outside its job under Needs a decision.
 
+To give work its own checkout, run `wt switch --create <branch> --no-cd -y --format json`, then run the work in the returned `path`.
+
 ## 1. Work
 
 Load `code-style`, then do the task as given.
 
 ## 2. Commit
 
-Commit every change the work made to a new branch named for the code it changes, following `code-style`'s Naming. Add a body only for a why the diff can't show.
+Commit every change the work made to a branch for this work, named for the code it changes, following `code-style`'s Naming; create it unless you are already on one. Add a body only for a why the diff can't show.
 
 ## 3. Start Greptile
 
@@ -27,11 +29,11 @@ Load `explain` and explain the whole commit. The conversation sets the level, no
 
 ## 5. Review fixes
 
-Fix a finding only when it is unequivocally correct and the fix is small and local; record every other finding with its severity for the report. Leave every fix unstaged.
+Fix a finding when its right fix is clear and changes nothing the user would want a say in, whether or not the commit touched that code; every other finding goes under Needs a decision. Leave every fix unstaged.
 
 - **Simplify.** Load `simplify`, scoped to the commit, and apply its findings under this rule instead of its no-edit default.
 - **Greptile.** When the background review exits, apply its findings under the same rule.
-Done when every finding is fixed or recorded.
+Done when every finding is fixed or under Needs a decision.
 
 ## 6. Tests
 
