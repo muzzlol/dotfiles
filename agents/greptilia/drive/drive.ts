@@ -1,6 +1,8 @@
 #!/usr/bin/env bun
 // GitHub side of the drive loop.
-//   bun drive.ts watch [pr]             print one line per new event until the round on the PR head settles
+//   bun drive.ts watch [--all-checks] [pr]
+//                                       print one line per new event until the round on the PR head settles;
+//                                       waits on both Greptile reviews and AWAITED_CHECKS, or every check with --all-checks
 //   bun drive.ts state [pr]             snapshot the PR into state.json and print a summary
 //   bun drive.ts respond <ledger> [pr]  post a fixer ledger: reply to each item, resolve the fixed threads
 //   bun drive.ts report [--notes <file>] [--dry-run] [pr]
@@ -25,6 +27,9 @@ const REPLY_GRACE_MS = 3 * 60_000
 const GIVE_UP_MS = 60 * 60_000
 // Waits on a person approving the PR, so no fix can turn it green.
 const IGNORED_CHECKS = new Set(['Confirm human in the loop'])
+// The checks a round waits on besides each reviewer's Greptile Review; the rest only report when they fail.
+const AWAITED_CHECKS = new Set(['Run Unit Tests', 'Run Typecheck'])
+const GREPTILE_REVIEWERS = ['greptile-apps', 'greptile-apps-staging']
 // gh supplies the token once; every API call after that is a direct request.
 const TOKEN = (await $`gh auth token`.quiet().text()).trim()
 
@@ -110,7 +115,7 @@ type WatchFile = {
 const [command, ...args] = process.argv.slice(2)
 switch (command) {
   case 'watch':
-    await watch(await loadPr(args[0]))
+    await watch(await loadPr(args.find((arg) => !arg.startsWith('--'))), args.includes('--all-checks'))
     break
   case 'state': {
     const pr = await loadPr(args[0])
@@ -135,10 +140,12 @@ switch (command) {
     break
   }
   default:
-    fail('usage: drive.ts watch|state [pr] | respond <ledger.json> [pr] | report [--notes <file>] [--dry-run] [pr]')
+    fail(
+      'usage: drive.ts watch [--all-checks] [pr] | state [pr] | respond <ledger.json> [pr] | report [--notes <file>] [--dry-run] [pr]',
+    )
 }
 
-async function watch(initial: Pr) {
+async function watch(initial: Pr, allChecks: boolean) {
   let checksDoneAt: number | null = null
   for (;;) {
     const [snapshot, watchFile, history] = await Promise.all([
@@ -209,7 +216,7 @@ async function watch(initial: Pr) {
       events.push(`comment ${comment.id} from ${comment.author}: "${comment.body.split('\n')[0]!.slice(0, 80)}"`)
     }
 
-    const greptileCheckOnHead = snapshot.checks.some((check) => isGreptile(check) && check.name === 'Greptile Review')
+    const greptileCheckOnHead = snapshot.checks.some(isGreptileReview)
     const summaryOnHead = snapshot.greptile.some((summary) => summary.onHead)
     if (
       !greptileCheckOnHead &&
@@ -227,7 +234,19 @@ async function watch(initial: Pr) {
       )
     }
 
-    const pendingChecks = snapshot.checks.filter((check) => check.state === 'pending').map((check) => check.name)
+    const pendingChecks = [
+      ...snapshot.checks
+        .filter(
+          (check) =>
+            check.state === 'pending' && !isGreptileReview(check) && (allChecks || AWAITED_CHECKS.has(check.name)),
+        )
+        .map((check) => check.name),
+      // A reviewer that hasn't started on the head yet holds the round as much as one still running.
+      ...GREPTILE_REVIEWERS.filter((app) => {
+        const review = snapshot.checks.find((check) => isGreptileReview(check) && check.app === app)
+        return review === undefined || review.state === 'pending'
+      }).map((app) => `${app} Greptile Review`),
+    ]
     // Right after a push the head has no check runs yet; a repo without CI shows none at all.
     if (snapshot.checks.length === 0 && headAge < REQUEST_REVIEW_AFTER_MS) pendingChecks.push('(no checks on head yet)')
     checksDoneAt = pendingChecks.length === 0 ? (checksDoneAt ?? Date.now()) : null
@@ -656,6 +675,10 @@ async function takeSnapshot(pr: Pr): Promise<Snapshot> {
 
 function isGreptile(check: Check) {
   return check.app.startsWith('greptile')
+}
+
+function isGreptileReview(check: Check) {
+  return isGreptile(check) && check.name === 'Greptile Review'
 }
 
 // Greptile's own checks mirror its score, which the loop reads from the summary instead.

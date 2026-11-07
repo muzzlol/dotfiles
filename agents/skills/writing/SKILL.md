@@ -15,6 +15,14 @@ Stiff: `Please be advised that the API key must be rotated prior to deployment.`
 
 Spoken: `Rotate the API key before you deploy.`
 
+## Choose what to say
+
+Before writing, decide what the reader needs from you: the answer, and the facts that change what they will do or believe, including limits they wouldn't know to ask about. Write those and stop. In a conversation, optional depth is one question away, and anything you added costs every read.
+
+- Don't repeat what the reader told you or why their own work exists. Judge what else they know from the conversation, not from authorship: code they wrote can still surprise them.
+- Report results, not the investigation, unless the reader asked how you got there or needs the method to trust, check, or repeat the result.
+- Leave out true, interesting facts that don't change the point, even ones you worked hard to find: they cost attention and lower recall of what surrounds them.
+
 ## Describe or direct
 
 When explaining how something works, write **declaratively**: describe the subject, naming the actor, behavior, conditions, and cause needed to explain the result.
@@ -41,7 +49,7 @@ Use every formatting element and punctuation mark whose job the text has, and no
 - Bold only the few phrases a skimmer must not miss; each extra bold phrase weakens the others. Start list items with a bold label only when the reader will scan for items by name or refer back to them, and end the label with a period when it works as a heading or a colon when the text after it defines it.
 - Choose the punctuation mark that names the relationship: a colon for what explains or expands a claim, a semicolon for two claims that form one thought, parentheses for a skippable aside, `->` for a sequence or transformation, `~` for an approximate number. Write every em dash as `--`.
 - Use shorthand engineers read at a glance where it says the same thing in fewer words: `=` for a definition, `<` and `>` for comparisons, `x` for a multiple, `/` for alternatives, `*` for a caveat footnoted below, `^` for the message above, `•` between short items on one line (a row of links closing a support reply), and `>` to quote the line you're replying to when the reply builds on it. The same goes for labels: `nit:` for a non-blocking review comment, `tl;dr:` atop a long message, `edit:` for a change to something people already read.
-- Use tables (for items that share attributes, when the reader needs comparison or lookup), `<details>`, GitHub alerts, `suggestion` blocks, and mermaid only where markdown rendering is confirmed: the text goes straight into a destination that renders it, such as a GitHub PR, issue, or comment, or a Markdown file. A chat reply, or a draft the user will paste elsewhere, is unconfirmed. Unrendered, these turn into noise; other markdown stays readable anywhere.
+- Use tables (for items that share attributes, when the reader needs comparison or lookup), `<details>`, GitHub alerts, `suggestion` blocks, and mermaid only where markdown rendering is confirmed: the text goes straight into a destination that renders it, such as a GitHub PR, issue, or comment, or a Markdown file. A chat reply, or a draft the user will paste elsewhere, is unconfirmed, except that this reader's chat renders `<details>`. Unrendered, these turn into noise; other markdown stays readable anywhere.
 - Text shown verbatim in a product UI gets no markup.
 
 ## Build for forward reading
