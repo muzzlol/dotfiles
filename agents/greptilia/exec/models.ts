@@ -3,6 +3,8 @@
 //   bun models.ts <model-id...>   e.g. `bun models.ts claude-opus-5-5 gpt-6.1-sol gpt-6-luna`
 // Prints CSV: one row per benchmarked effort level of each model, highest intelligence index first. An id with no
 // benchmark gets one row with empty fields; an empty price or speed means the API has no measurement.
+// `usd_per_task` is what one benchmark task cost at that effort, so it shows what a higher effort costs in extra
+// tokens; `usd_per_1m_blended` is the same at every effort of a model.
 // Key: $AA_API_KEY, else its export line in ~/.secrets. Exits 1 when there is no usable data, so the caller keeps the parent's model.
 const URL = "https://artificialanalysis.ai/api/v2/language/models/free";
 
@@ -10,6 +12,7 @@ type Model = {
   name: string;
   slug: string;
   evaluations?: { artificial_analysis_intelligence_index?: number | null };
+  artificial_analysis_intelligence_index_cost?: { cost_per_task?: { total_cost?: number | null } };
   pricing?: { price_1m_input_tokens?: number | null; price_1m_output_tokens?: number | null };
   performance?: { median_output_tokens_per_second?: number | null };
 };
@@ -72,17 +75,18 @@ const rows = matches
   .flatMap(({ id, rows }) => rows.map((model) => ({ id, model })))
   .filter(({ model }) => intelligence(model) !== null)
   .toSorted((a, b) => intelligence(b.model)! - intelligence(a.model)!);
-console.log("id,effort,intelligence,usd_per_1m_blended,tokens_per_s");
+console.log("id,effort,intelligence,usd_per_task,usd_per_1m_blended,tokens_per_s");
 for (const { id, model } of rows) {
   const row = [
     id,
     effort(model),
     cell(intelligence(model), 1),
+    cell(model.artificial_analysis_intelligence_index_cost?.cost_per_task?.total_cost, 3),
     cell(blended(model), 2),
     cell(model.performance?.median_output_tokens_per_second, 0),
   ];
   console.log(row.join(","));
 }
 for (const { id, rows } of matches) {
-  if (!rows.some((model) => intelligence(model) !== null)) console.log(`${id},,,,`);
+  if (!rows.some((model) => intelligence(model) !== null)) console.log(`${id},,,,,`);
 }

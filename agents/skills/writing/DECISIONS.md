@@ -23,11 +23,11 @@ Bad:
 
 Better:
 
-> **Should a review be marked degraded when an admin removes an integration while the review runs?**
-> If an admin deletes an integration at the moment a review is fetching its credentials, the review records the integration as disconnected and shows as degraded, though nothing broke: the admin removed it on purpose. Both have to happen at the same moment, and the cost is one review with a wrong label.
+> **Should a review show as degraded when an admin removes an integration mid-review?**
+> If an admin deletes an integration while a review fetches its credentials, the review shows as degraded though nothing broke. Both must happen at once.
 >
-> - Check that the integration still exists before recording it as disconnected: a small change on that one failure path.
-> - Leave it: an occasional wrong "degraded" label; no data is affected.
+> - Check the integration still exists before marking it disconnected: a small change on one failure path.
+> - Leave it: an occasional wrong "degraded" label; no data affected.
 >
-> I'd leave it, since the worst case is a wrong label on one review. The comment thread stays open until you decide.
-> [thread](https://github.com/…) · `packages/common/utils/tokens.ts:387`
+> I'd leave it: the worst case is one wrong label. The thread stays open until you decide.
+> [thread](https://github.com/…) · `tokens.ts:387`

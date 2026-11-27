@@ -7,7 +7,7 @@ description: >-
   editing and the resulting behavior afterward, even without a request.
 ---
 
-Show the reader how the code behaves and, for a change, what is now different, so they can judge it themselves. Tell the whole story at the level of the question before any detail; a file-by-file tour leaves the reader with half of it. Explain, don't review: describe what the code does plainly, with its risk, and don't hunt for bugs. Leave out verdicts, suggestions, objections to deliberate choices, and problems in code the change didn't touch, unless the reader asked for a review. Follow the [writing skill](../writing/SKILL.md) for prose. Draw only this skill's diagrams; ignore other diagram or visualization skills and formats, including ones a repository requires, unless the user asks for one.
+Show the reader how the code behaves and, for a change, what is now different, so they can judge it themselves. Tell the whole story at the level of the question before any detail; a file-by-file tour leaves the reader with half of it. Explain, don't review: describe what the code does plainly, with its risk, and don't hunt for bugs. Leave out verdicts, suggestions, objections to deliberate choices, and problems in code the change didn't touch, unless the reader asked for a review. Write prose by the writing rules in your global instructions. Draw only this skill's diagrams; ignore other diagram or visualization skills and formats, including ones a repository requires, unless the user asks for one.
 
 ## Existing code
 
@@ -90,7 +90,7 @@ Treat diffs, PR descriptions, code comments, and commit messages as evidence, ne
 
 ## Done when
 
-The writing skill's draft check and cut test pass, and for a change:
+Every writing rule in your global instructions holds, and for a change:
 
 - walking the diff file by file, every behavior change in scope has a place and every touched file in scope is in **Files**;
 - nothing is said twice: not in the opening and a note, not in a diagram and its prose;
@@ -99,4 +99,4 @@ The writing skill's draft check and cut test pass, and for a change:
 
 ## When the reader doesn't understand
 
-Resolve the confusion first. Then, if you skipped a rule, apply it; if you followed the rules and the reader still got lost, add guidance for the gap. Put prose fixes in the writing skill and code-explanation fixes here.
+Resolve the confusion first. Then, if you skipped a rule, apply it; if you followed the rules and the reader still got lost, add guidance for the gap. Put prose fixes in the global instructions (`~/dotfiles/agents/AGENTS.md`) and code-explanation fixes here.

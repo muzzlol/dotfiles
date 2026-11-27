@@ -33,6 +33,7 @@ misplaced fixes: a fix applied where a bug surfaced instead of in the module tha
 stored derived state: values stored that can be derived from their source, creating stale-state risk. Storing both is justified only to preserve a historical or operational fact, or when recalculation is measured too expensive, and then one transaction or event writes both.
 hand-copied types: types that restate a shape instead of deriving it from its source schema, generated types, or utility types.
 overlapping modules: a new module for a responsibility an existing module already owns.
+half-applied changes: a change made for one provider, service, or caller but not the others that need it too.
 
 Code quality: look for simplification opportunities, including but not limited to:
 low-information comments: flag a comment unless it records a current constraint, not evident from code or tests, that could prevent a plausible wrong edit.

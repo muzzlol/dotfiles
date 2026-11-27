@@ -47,6 +47,7 @@ alias vi='nvim'
 alias vim='nvim'
 alias sv='source .venv/bin/activate'
 alias k='kubectl'
+alias tf='terraform'
 alias kk='cursor .'
 alias kz='cursor ~/.zshrc'
 alias vz='vim ~/.zshrc'
@@ -256,3 +257,7 @@ esac
 # pnpm end
 
 export PATH="$HOME/.krew/bin:$PATH"
+
+# T3 Code telemetry
+export T3CODE_TELEMETRY_ENABLED=false
+export T3CODE_OTEL_SDK_DISABLED=true

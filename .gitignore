@@ -51,3 +51,6 @@ worktrunk
 tmux/plugins/*
 !tmux/plugins/catppuccin-tmux/
 !tmux/plugins/catppuccin-tmux/**
+# Skills Claude Code syncs from claude.ai into ~/.claude/skills, which links here
+agents/skills/synced/
+agents/emojis/

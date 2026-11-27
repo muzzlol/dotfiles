@@ -37,16 +37,18 @@ When rewriting, reassess the draft’s framing and assumptions for the intended 
 
 When answering a direct question, state the answer first if the reader can understand it without a missing premise. Otherwise, start from what the reader already knows, not from what you just learned.
 
+When explaining how something works or would work, give the big picture and intent first, then tell it in the order things happen. Implementation detail (which script, which function) comes only after those are conveyed.
+
 Apply the same order to every unit: open each section and each paragraph with its point, and let the rest of the unit support or qualify it.
 
 ## Format by job
 
 Use every formatting element and punctuation mark whose job the text has, and none whose job it lacks. An element's job is helping the reader understand, find, or act on something; formatting without one is decoration that costs attention.
 
-- Use connected prose when causality, qualification, or argument carries the meaning; numbered steps when order is part of the meaning; bullets for independent items. Add headings only when the structure is complex enough that the reader must navigate.
+- Use connected prose when causality, qualification, or argument carries the meaning, in short paragraphs split where the idea changes; numbered steps when order is part of the meaning; bullets only for items that stand alone. Add headings only when the structure is complex enough that the reader must navigate.
 - Indent an exception under the rule it narrows. A peer bullet hides what it modifies; inlining it bloats the rule.
 - Put a line the reader must not miss (a warning, a breaking change, the ask) on its own line, before the action it governs.
-- Bold only the few phrases a skimmer must not miss; each extra bold phrase weakens the others. Start list items with a bold label only when the reader will scan for items by name or refer back to them, and end the label with a period when it works as a heading or a colon when the text after it defines it.
+- Bold only the few phrases a skimmer must not miss; each extra bold phrase weakens the others. Open a list item or paragraph with the sentence that makes its point. Label one only with the name of the thing its text defines (a flag, a field, a term), never with its topic or the role its text plays (`Cause:`, `Why it matters:`).
 - Choose the punctuation mark that names the relationship: a colon for what explains or expands a claim, a semicolon for two claims that form one thought, parentheses for a skippable aside, `->` for a sequence or transformation, `~` for an approximate number. Write every em dash as `--`.
 - Use shorthand engineers read at a glance where it says the same thing in fewer words: `=` for a definition, `<` and `>` for comparisons, `x` for a multiple, `/` for alternatives, `*` for a caveat footnoted below, `^` for the message above, `•` between short items on one line (a row of links closing a support reply), and `>` to quote the line you're replying to when the reply builds on it. The same goes for labels: `nit:` for a non-blocking review comment, `tl;dr:` atop a long message, `edit:` for a change to something people already read.
 - Use tables (for items that share attributes, when the reader needs comparison or lookup), `<details>`, GitHub alerts, `suggestion` blocks, and mermaid only where markdown rendering is confirmed: the text goes straight into a destination that renders it, such as a GitHub PR, issue, or comment, or a Markdown file. A chat reply, or a draft the user will paste elsewhere, is unconfirmed, except that this reader's chat renders `<details>`. Unrendered, these turn into noise; other markdown stays readable anywhere.
